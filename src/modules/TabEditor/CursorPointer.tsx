@@ -2,7 +2,7 @@ import React, { useEffect, useCallback, useRef, CSSProperties, useState } from '
 import PropTypes from 'prop-types';
 import { EditorState } from 'draft-js';
 import { CursorPosition, EditorRef } from './types';
-import { getEditorStateWithFocus } from './service';
+import { getEditorStateWithFocus, checkIfHasTwoNumberNoteInColumn } from './service';
 
 // https://stackoverflow.com/questions/42646339/monospace-font-with-exactly-15px-height-and-7px-width
 // Font size:
@@ -51,14 +51,13 @@ const CursorPointer: React.FC<Props> = ({ editorState, setEditorChange }) => {
     let left = 0;
     let newFocusOffset = focusOffset;
 
-    if (focusChar === '-' || !focusChar) {
-      left = focusOffset * FONT_WIDTH_PX - OFFSET;
-    } else {
-      console.log('BIGGER', spaceChars.includes(focusChar), spaceChars.includes(focusNextChar));
+    if (checkIfHasTwoNumberNoteInColumn(editorState.getCurrentContent(), block, focusOffset)) {
       left = (focusOffset - 1) * FONT_WIDTH_PX - OFFSET;
       newFocusOffset -= 1;
 
       setEditorChange(getEditorStateWithFocus(editorState, focusKey, newFocusOffset));
+    } else {
+      left = focusOffset * FONT_WIDTH_PX - OFFSET;
     }
     setPosition({
       left,

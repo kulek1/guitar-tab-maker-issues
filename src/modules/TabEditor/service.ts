@@ -15,6 +15,10 @@ const EMPTY_TABLATURE = ['E', 'B', 'G', 'D', 'A', 'E'];
 
 const TAB_BLOCK_TYPE = 'TabLine';
 
+const TAB_NOTATIONS = ['/', 'h', 'p', 's'];
+export const hasNoteOrTabNotation = (char: string): boolean =>
+  !!Number(char) || TAB_NOTATIONS.includes(char);
+
 const hasTablatureSyntax = (text: string) =>
   EMPTY_TABLATURE.some((note) => text.startsWith(`${note}|`));
 
@@ -41,11 +45,7 @@ export const getRaw = (editorState: EditorState): void => {
   // console.warn(blocks);
 };
 
-export const findGuitarStringInBlock = (
-  contentState: ContentState,
-  block: ContentBlock,
-  guitarString: number
-) => {
+export const findGuitarStringInBlock = (contentState: ContentState, block: ContentBlock) => {
   const blockData = block.getData();
   const blockKey = block.getKey();
   const tabId = blockData.get('id');
@@ -86,10 +86,26 @@ export const findGuitarStringInBlock = (
   return tabBlocks;
 };
 
+export const checkIfHasTwoNumberNoteInColumn = (
+  contentState: ContentState,
+  block: ContentBlock,
+  focusOffset: number
+): boolean => {
+  const blocks = findGuitarStringInBlock(contentState, block);
+  const match = blocks.find((lineBlock: ContentBlock) => {
+    const text = lineBlock.getText();
+    if (hasNoteOrTabNotation(text[focusOffset - 1]) && hasNoteOrTabNotation(text[focusOffset])) {
+      return true;
+    }
+    return false;
+  });
+  return !!match;
+};
+
 export const getTabBlockBasedOnSelection = (
   selection: SelectionState,
   contentState: ContentState
-) => {
+): ContentBlock => {
   const blockKey = selection.get('anchorKey');
   const block = contentState.getBlockForKey(blockKey);
 
@@ -114,7 +130,10 @@ export const getEditorStateWithFocus = (
   return EditorState.forceSelection(editorState, newSelectionState as SelectionState);
 };
 
-export const insertNote = (editorState: EditorState, { noteNumber, guitarString }: TabNote) => {
+export const insertNote = (
+  editorState: EditorState,
+  { noteNumber, guitarString }: TabNote
+): EditorState => {
   try {
     const selection = editorState.getSelection();
     const focusOffset = selection.getFocusOffset();
@@ -122,7 +141,7 @@ export const insertNote = (editorState: EditorState, { noteNumber, guitarString 
     const contentState = editorState.getCurrentContent();
 
     const block = getTabBlockBasedOnSelection(selection, contentState);
-    const tabBlocks = findGuitarStringInBlock(contentState, block, guitarString);
+    const tabBlocks = findGuitarStringInBlock(contentState, block);
 
     let nextEditorState = EditorState.createEmpty();
     let nextContentState = contentState;
