@@ -118,6 +118,9 @@ export const insertNote = (editorState: EditorState, { noteNumber, guitarString 
     let nextEditorState = EditorState.createEmpty();
     let nextContentState = contentState;
 
+    const noteAsString = noteNumber.toString();
+    const spaceToAdd = noteAsString.length === 2 ? '---' : '--';
+
     tabBlocks.forEach((tabBlock) => {
       const selectionState = SelectionState.createEmpty(tabBlock.getKey());
       const blockLength = tabBlock.getLength();
@@ -129,7 +132,7 @@ export const insertNote = (editorState: EditorState, { noteNumber, guitarString 
       nextContentState = Modifier.insertText(
         nextContentState,
         selectionWithOffset as SelectionState,
-        currentGuitarString === guitarString ? `${noteNumber.toString()}-` : '--'
+        currentGuitarString === guitarString ? `${noteAsString}-` : spaceToAdd
       );
       nextEditorState = EditorState.push(nextEditorState, nextContentState, 'insert-characters');
       getRaw(nextEditorState);
