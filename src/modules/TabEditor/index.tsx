@@ -1,76 +1,50 @@
-import React, { useState, useRef, useEffect, useContext } from 'react';
-import {
-  Editor,
-  EditorState,
-  convertFromHTML,
-  convertFromRaw,
-  convertToRaw,
-  ContentState,
-  Modifier,
-} from 'draft-js';
+import React, { useState, useRef, useEffect, useContext, useCallback } from 'react';
+import { Editor, EditorState, convertFromHTML, ContentState, SelectionState } from 'draft-js';
 import AppContext from 'AppContext';
-import { getEmptyTablature, insertNote, getRaw, getSelection } from './service';
+import { getEmptyTablature, insertNote, getRaw } from './service';
+import CursorPointer from './CursorPointer';
+import { CursorPosition, EditorRef } from './types';
 
 type Props = {};
 
 const TabEditor: React.FC<Props> = () => {
-  const editor = useRef<Editor>(null);
+  const editorRef = useRef<EditorRef>(null);
+  const [editorState, setEditorState] = useState<EditorState>(getEmptyTablature());
+  const editorStateCopyRef = useRef<EditorState>(editorState);
   const { notes } = useContext(AppContext);
 
-  const [editorState, setEditorState] = useState(getEmptyTablature());
+  editorStateCopyRef.current = editorState; // useEffect caches useState vars so we need useRef
+
+  function getCursorPosition(selection: SelectionState) {
+    return {
+      focusKey: selection.getFocusKey(),
+      focusOffset: selection.getFocusOffset(),
+    };
+  }
+
+  // const handleMouseUp = (): void => {
+  //   setTimeout(() => {
+  //     const selection = editorStateCopyRef.current.getSelection();
+  //     setCursorPosition(getCursorPosition(selection));
+  //   }, 0);
+  // };
+
+  // useEffect(
+  //   function getMousePosition() {
+  //     editorRef?.current?.editor.addEventListener('mouseup', handleMouseUp);
+  //     return (): void => {
+  //       editorRef?.current?.editor.removeEventListener('mouseup', handleMouseUp);
+  //     };
+  //   },
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  //   []
+  // );
 
   function focusEditor(): void {
-    if (editor.current) {
-      editor.current.focus();
+    if (editorRef.current) {
+      editorRef.current.focus();
     }
   }
-
-  // function appendToCurrentPosition({ noteNumber, guitarString }: TabNote): void {
-  //   const selection = editorState.getSelection();
-  //   const contentState = editorState.getCurrentContent();
-  //   let nextEditorState = EditorState.createEmpty();
-  //   if (selection.isCollapsed()) {
-  //     const nextContentState = Modifier.insertText(contentState, selection, noteNumber.toString());
-  //     nextEditorState = EditorState.push(editorState, nextContentState, 'insert-characters');
-  //   } else {
-  //     const nextContentState = Modifier.replaceText(contentState, selection, noteNumber.toString());
-  //     nextEditorState = EditorState.push(editorState, nextContentState, 'insert-characters');
-  //   }
-  //   setEditorState(nextEditorState);
-  // }
-
-  function insertBlocksFromHtml(htmlString) {
-    const newBlockMap = convertFromHTML('xd');
-    const contentState = editorState.getCurrentContent();
-    const selectionState = editorState.getSelection();
-    const key = selectionState.getAnchorKey();
-    const blocksAfter = contentState
-      .getBlockMap()
-      .skipUntil(function (_, k) {
-        return k === key;
-      })
-      .skip(1)
-      .toArray();
-    const blocksBefore = contentState
-      .getBlockMap()
-      .takeUntil(function (_, k) {
-        return k === key;
-      })
-      .toArray();
-
-    newBlockMap.contentBlocks = blocksBefore
-      .concat([contentState.getBlockForKey(key)])
-      .concat(newBlockMap.contentBlocks)
-      .concat(blocksAfter);
-
-    const newContentState = ContentState.createFromBlockArray(
-      newBlockMap as any,
-      newBlockMap.entityMap
-    );
-    const newEditorState = EditorState.createWithContent(newContentState);
-    setEditorState(newEditorState);
-  }
-  // console.warn(editorState.getCurrentContent().getPlainText());
 
   useEffect(() => {
     if (notes.length) {
@@ -85,14 +59,15 @@ const TabEditor: React.FC<Props> = () => {
       <button type="button" onClick={() => getRaw(editorState)}>
         Get RAW
       </button>
-      <button type="button" onClick={insertBlocksFromHtml}>
+      {/* <button type="button" onClick={insertBlocksFromHtml}>
         Insert new block from HTML
-      </button>
-      <button type="button" onClick={() => getSelection(editorState)}>
+      </button> */}
+      <button type="button" onClick={() => console.log(editorState.getSelection())}>
         Get selection
       </button>
       <div className="tab-editor__code" onClick={focusEditor}>
-        <Editor ref={editor} editorState={editorState} onChange={setEditorState} />
+        <Editor ref={editorRef} editorState={editorState} onChange={setEditorState} />
+        <CursorPointer editorState={editorState} setEditorChange={setEditorState} />
       </div>
     </div>
   );

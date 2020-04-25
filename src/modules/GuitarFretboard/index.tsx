@@ -1,5 +1,5 @@
 import React, { useState, useContext } from 'react';
-import { Note, NoteInfo } from 'types/notes';
+import { Note } from 'types/notes';
 import { convertToOpenNote } from 'utils/notes';
 import AppContext from 'AppContext';
 import OpenNoteSelector from './OpenNoteSelector';
@@ -111,14 +111,14 @@ const GuitarFretboard: React.FC<Props> = ({ showAllNotes, frets = 19 }) => {
   const [openNotes, setOpenNotes] = useState(contextInitialValue.openNotes);
   const { addNote } = useContext(AppContext);
 
-  function setOpenNote(note: Note, guitarString: number) {
+  function setOpenNote(note: Note, guitarString: number): void {
     setOpenNotes((currentOpenNotes) => ({
       ...currentOpenNotes,
       [guitarString]: convertToOpenNote(note),
     }));
   }
 
-  function handleNoteClick(noteNumber: number, guitarString: number) {
+  function handleNoteClick(noteNumber: number, guitarString: number): void {
     addNote({ noteNumber, guitarString });
   }
 

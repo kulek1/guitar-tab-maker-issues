@@ -1,5 +1,6 @@
 .tab-editor {
   &__container {
+    position: relative;
     background: #060508;
     height: 40%;
     cursor: text;
@@ -12,7 +13,7 @@
 
   &__code {
     height: 100%;
-    font-family: monospace;
-    font-size: 2rem;
+    font-family: monospace, monospace;
+    font-size: 1.6rem;
   }
 }

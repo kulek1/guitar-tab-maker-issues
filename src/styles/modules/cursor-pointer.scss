@@ -1,0 +1,13 @@
+.cursor-pointer {
+  top: 0;
+  position: absolute;
+  background: red;
+
+  &__tail {
+    position: relative;
+    background: blue;
+    height: 96px;
+    width: 3px;
+    border-radius: 50%;
+  }
+}

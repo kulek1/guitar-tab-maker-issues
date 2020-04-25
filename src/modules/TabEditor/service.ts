@@ -38,12 +38,7 @@ export const getEmptyTablature = (): EditorState => {
 
 export const getRaw = (editorState: EditorState): void => {
   const { blocks } = convertToRaw(editorState.getCurrentContent());
-  console.warn(blocks);
-};
-
-export const getSelection = (editorState: EditorState): void => {
-  const selection = editorState.getSelection();
-  console.warn(selection.toObject());
+  // console.warn(blocks);
 };
 
 export const findGuitarStringInBlock = (
@@ -107,9 +102,23 @@ export const getTabBlockBasedOnSelection = (
   return block;
 };
 
+export const getEditorStateWithFocus = (
+  editorState: EditorState,
+  blockKey: string,
+  offset: number
+): EditorState => {
+  const newSelectionState = SelectionState.createEmpty(blockKey).merge({
+    focusOffset: offset,
+    anchorOffset: offset,
+  });
+  return EditorState.forceSelection(editorState, newSelectionState as SelectionState);
+};
+
 export const insertNote = (editorState: EditorState, { noteNumber, guitarString }: TabNote) => {
   try {
     const selection = editorState.getSelection();
+    const focusOffset = selection.getFocusOffset();
+    const anchorOffset = selection.getAnchorOffset();
     const contentState = editorState.getCurrentContent();
 
     const block = getTabBlockBasedOnSelection(selection, contentState);
@@ -123,11 +132,11 @@ export const insertNote = (editorState: EditorState, { noteNumber, guitarString 
 
     tabBlocks.forEach((tabBlock) => {
       const selectionState = SelectionState.createEmpty(tabBlock.getKey());
-      const blockLength = tabBlock.getLength();
+      // const blockLength = tabBlock.getLength();
       const currentGuitarString = tabBlock.getData().get('guitarString');
       const selectionWithOffset = selectionState.merge({
-        focusOffset: blockLength,
-        anchorOffset: blockLength,
+        focusOffset,
+        anchorOffset,
       });
       nextContentState = Modifier.insertText(
         nextContentState,
@@ -138,17 +147,60 @@ export const insertNote = (editorState: EditorState, { noteNumber, guitarString 
       getRaw(nextEditorState);
     });
 
-    // if (selection.isCollapsed()) {
-    //   const nextContentState = Modifier.insertText(contentState, selection, noteNumber.toString());
-    //   nextEditorState = EditorState.push(editorState, nextContentState, 'insert-characters');
-    // } else {
-    //   const nextContentState = Modifier.replaceText(contentState, selection, noteNumber.toString());
-    //   nextEditorState = EditorState.push(editorState, nextContentState, 'insert-characters');
-    // }
-    return nextEditorState;
+    return getEditorStateWithFocus(
+      nextEditorState,
+      block.getKey(),
+      focusOffset + spaceToAdd.length
+    );
   } catch (err) {
     console.error(err);
     console.log('Should create a new tab instead');
     return editorState;
   }
 };
+
+// function appendToCurrentPosition({ noteNumber, guitarString }: TabNote): void {
+//   const selection = editorState.getSelection();
+//   const contentState = editorState.getCurrentContent();
+//   let nextEditorState = EditorState.createEmpty();
+//   if (selection.isCollapsed()) {
+//     const nextContentState = Modifier.insertText(contentState, selection, noteNumber.toString());
+//     nextEditorState = EditorState.push(editorState, nextContentState, 'insert-characters');
+//   } else {
+//     const nextContentState = Modifier.replaceText(contentState, selection, noteNumber.toString());
+//     nextEditorState = EditorState.push(editorState, nextContentState, 'insert-characters');
+//   }
+//   setEditorState(nextEditorState);
+// }
+
+// function insertBlocksFromHtml(htmlString) {
+//   const newBlockMap = convertFromHTML('xd');
+//   const contentState = editorState.getCurrentContent();
+//   const selectionState = editorState.getSelection();
+//   const key = selectionState.getAnchorKey();
+//   const blocksAfter = contentState
+//     .getBlockMap()
+//     .skipUntil(function (_, k) {
+//       return k === key;
+//     })
+//     .skip(1)
+//     .toArray();
+//   const blocksBefore = contentState
+//     .getBlockMap()
+//     .takeUntil(function (_, k) {
+//       return k === key;
+//     })
+//     .toArray();
+
+//   newBlockMap.contentBlocks = blocksBefore
+//     .concat([contentState.getBlockForKey(key)])
+//     .concat(newBlockMap.contentBlocks)
+//     .concat(blocksAfter);
+
+//   const newContentState = ContentState.createFromBlockArray(
+//     newBlockMap as any,
+//     newBlockMap.entityMap
+//   );
+//   const newEditorState = EditorState.createWithContent(newContentState);
+//   setEditorState(newEditorState);
+// }

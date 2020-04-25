@@ -7,7 +7,6 @@ const audioContext = new AudioContextFunc();
 const player = new WebAudioFontPlayer();
 
 player.adjustPreset(audioContext, _tone_0253_Acoustic_Guitar_sf2_file);
-// player.loader.startLoad(audioContext, info.url, info.variable);
 
 const NOTES = {
   C: 0,
@@ -24,14 +23,6 @@ const NOTES = {
   B: 11,
   O: 12, // not sure
 };
-
-const O = 12;
-const _6th = NOTES.E + O * 3;
-const _5th = NOTES.A + O * 3;
-const _4th = NOTES.D + O * 4;
-const _3rd = NOTES.G + O * 4;
-const _2nd = NOTES.B + O * 4;
-const _1st = NOTES.E + O * 5;
 
 // 4*12+0 <div class="c4">
 
