@@ -1,5 +1,5 @@
 import WebAudioFontPlayer from 'webaudiofont';
-import { Note, OpenNote } from 'types/notes';
+import { Note } from 'types/notes';
 import { _tone_0253_Acoustic_Guitar_sf2_file } from 'assets/0253_Acoustic_Guitar_sf2_file';
 
 const AudioContextFunc = window.AudioContext || (window as any).webkitAudioContext;

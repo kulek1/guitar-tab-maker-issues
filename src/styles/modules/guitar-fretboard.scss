@@ -27,6 +27,17 @@ h1 {
   background: $neck-color;
   box-shadow: inset -1px 0px 11px 0px rgba(0, 0, 0, 0.75);
 
+  &-scrollable-wrapper {
+    overflow-x: auto;
+    overflow-y: hidden;
+  }
+
+  &-wrapper {
+    width: $neck-width + 150;
+    margin: 0 auto;
+    height: $neck-height + 50;
+  }
+
   .open-notes {
     position: absolute;
     top: -1px;
@@ -56,6 +67,7 @@ h1 {
       font-size: 1.6rem;
       width: 40px;
       margin-left: 4px;
+      text-align: center;
     }
 
     &.first {
@@ -68,7 +80,7 @@ h1 {
       background: #211f1d;
 
       > span {
-        margin-left: 15px;
+        margin-left: 30px;
       }
     }
   }

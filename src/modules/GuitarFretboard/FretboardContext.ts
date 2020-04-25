@@ -1,14 +1,14 @@
 import { createContext } from 'react';
-import { OpenNote, Note } from 'types/notes';
+import { NoteInfo, Note } from 'types/notes';
 
 export type FretboardCtxValue = {
   openNotes: {
-    1: OpenNote;
-    2: OpenNote;
-    3: OpenNote;
-    4: OpenNote;
-    5: OpenNote;
-    6: OpenNote;
+    1: NoteInfo;
+    2: NoteInfo;
+    3: NoteInfo;
+    4: NoteInfo;
+    5: NoteInfo;
+    6: NoteInfo;
   };
   setOpenNotes: (note: Note, guitarString: number) => void;
 };

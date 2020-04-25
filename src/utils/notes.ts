@@ -1,8 +1,8 @@
-import { Note, OpenNote } from 'types/notes';
+import { Note, NoteInfo } from 'types/notes';
 import { NOTES_PROGRESSION, NOTES_TO_NUMBERS } from 'constants/notes';
 
 // F#3 -> F# and 3
-export const convertToOpenNote = (note: Note): OpenNote => ({
+export const convertToOpenNote = (note: Note): NoteInfo => ({
   note: note.slice(0, note.length - 1) as Note,
   octave: parseInt(note.slice(note.length - 1), 10),
 });

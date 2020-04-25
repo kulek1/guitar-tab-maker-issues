@@ -1,14 +1,10 @@
-import React, { useContext, useState } from 'react';
-import { Note } from 'types/notes';
+import React, { useState, useContext } from 'react';
+import { Note, NoteInfo } from 'types/notes';
 import { convertToOpenNote } from 'utils/notes';
+import AppContext from 'AppContext';
 import OpenNoteSelector from './OpenNoteSelector';
-import { play } from '../../utils/webAudioPlayer';
 import FretboardContext, { contextInitialValue } from './FretboardContext';
 import FretNotes from './FretNotes';
-
-let slideSpeed = 300;
-let noteToShow = 'All';
-let canClick = true;
 
 // for (var i = 0; i < notes.e.length; i++) {
 //   $(".mask.low-e ul").append(
@@ -113,6 +109,7 @@ type Props = {
 
 const GuitarFretboard: React.FC<Props> = ({ showAllNotes, frets = 19 }) => {
   const [openNotes, setOpenNotes] = useState(contextInitialValue.openNotes);
+  const { addNote } = useContext(AppContext);
 
   function setOpenNote(note: Note, guitarString: number) {
     setOpenNotes((currentOpenNotes) => ({
@@ -121,52 +118,56 @@ const GuitarFretboard: React.FC<Props> = ({ showAllNotes, frets = 19 }) => {
     }));
   }
 
-  const log = (note: any) => {
-    console.log(note);
-    play(note);
-  };
+  function handleNoteClick(noteNumber: number, guitarString: number) {
+    addNote({ noteNumber, guitarString });
+  }
 
   return (
-    <FretboardContext.Provider value={{
-      openNotes,
-      setOpenNotes: setOpenNote,
-    }}
+    <FretboardContext.Provider
+      value={{
+        openNotes,
+        setOpenNotes: setOpenNote,
+      }}
     >
-      <div className="guitar-neck">
-        <div className="fret first">
-          <span>0</span>
-        </div>
-        {[...Array(frets + 1)].map((_, idx) => (
-          <div className="fret" key={idx}>
-            <span>{idx + 1}</span>
+      <div className="guitar-neck-scrollable-wrapper">
+        <div className="guitar-neck-wrapper">
+          <div className="guitar-neck">
+            <div className="fret first">
+              <span>0</span>
+            </div>
+            {[...Array(frets + 1)].map((_, idx) => (
+              <div className="fret" key={idx}>
+                <span>{idx + 1}</span>
+              </div>
+            ))}
+
+            <ul className="dots">
+              <li />
+              <li />
+              <li />
+              <li />
+            </ul>
+            <ul className="strings">
+              <li />
+              <li />
+              <li />
+              <li />
+              <li />
+              <li />
+            </ul>
+
+            <ul className="open-notes">
+              <OpenNoteSelector defaultNote={openNotes[1]} guitarString={1} />
+              <OpenNoteSelector defaultNote={openNotes[2]} guitarString={2} />
+              <OpenNoteSelector defaultNote={openNotes[3]} guitarString={3} />
+              <OpenNoteSelector defaultNote={openNotes[4]} guitarString={4} />
+              <OpenNoteSelector defaultNote={openNotes[5]} guitarString={5} />
+              <OpenNoteSelector defaultNote={openNotes[6]} guitarString={6} />
+            </ul>
+            <div className="notes">
+              <FretNotes onNoteClick={handleNoteClick} frets={frets} />
+            </div>
           </div>
-        ))}
-
-        <ul className="dots">
-          <li />
-          <li />
-          <li />
-          <li />
-        </ul>
-        <ul className="strings">
-          <li />
-          <li />
-          <li />
-          <li />
-          <li />
-          <li />
-        </ul>
-
-        <ul className="open-notes">
-          <OpenNoteSelector defaultNote={openNotes[1]} guitarString={1} />
-          <OpenNoteSelector defaultNote={openNotes[2]} guitarString={2} />
-          <OpenNoteSelector defaultNote={openNotes[3]} guitarString={3} />
-          <OpenNoteSelector defaultNote={openNotes[4]} guitarString={4} />
-          <OpenNoteSelector defaultNote={openNotes[5]} guitarString={5} />
-          <OpenNoteSelector defaultNote={openNotes[6]} guitarString={6} />
-        </ul>
-        <div className="notes">
-          <FretNotes onNoteClick={log} frets={frets} />
         </div>
       </div>
     </FretboardContext.Provider>

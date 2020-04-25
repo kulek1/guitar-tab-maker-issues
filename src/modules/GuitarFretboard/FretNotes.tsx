@@ -1,19 +1,13 @@
 import React, { useContext } from 'react';
-import { Note, OpenNote } from 'types/notes';
+import { Note } from 'types/notes';
 import { MORE_NOTES } from 'constants/notes';
-import {
-  generateOctave,
-  generateOctaveWithNumbers,
-  getNextNote,
-  convertToOpenNote,
-  getNoteWithoutOctave,
-} from 'utils/notes';
-import { NotePlayerData } from 'utils/webAudioPlayer';
+import { generateOctaveWithNumbers, convertToOpenNote, getNoteWithoutOctave } from 'utils/notes';
+import { play } from 'utils/webAudioPlayer';
 import FretboardContext from './FretboardContext';
 
 type Props = {
   frets: number;
-  onNoteClick: (note: NotePlayerData) => void;
+  onNoteClick: (note: number, guitarString: number) => void;
 };
 
 const mainGuitarStrings = Object.keys(MORE_NOTES) as Array<keyof typeof MORE_NOTES>;
@@ -35,11 +29,13 @@ const generateOctavesWithNumbers = (note: Note, octaveNumber: number, frets: num
 const FretNotes: React.FC<Props> = ({ onNoteClick, frets = 12 }) => {
   const { openNotes } = useContext(FretboardContext);
 
-  const onNoteClickCallback = (note: string): void =>
-    onNoteClick({
+  const onNoteClickCallback = (note: string, noteNumber: number, guitarString: string): void => {
+    play({
       note: getNoteWithoutOctave(note),
       octave: convertToOpenNote(note as Note).octave,
     });
+    onNoteClick(noteNumber, parseInt(guitarString, 10));
+  };
 
   return (
     <>
@@ -48,11 +44,17 @@ const FretNotes: React.FC<Props> = ({ onNoteClick, frets = 12 }) => {
         return (
           <div className="mask" key={mainGuitarString}>
             <ul>
-              {generateOctavesWithNumbers(openNote.note, openNote.octave, frets).map((note) => (
-                <button type="button" key={note} onClick={() => onNoteClickCallback(note)}>
-                  {note}
-                </button>
-              ))}
+              {generateOctavesWithNumbers(openNote.note, openNote.octave, frets).map(
+                (note, idx) => (
+                  <button
+                    type="button"
+                    key={note}
+                    onClick={() => onNoteClickCallback(note, idx, mainGuitarString)}
+                  >
+                    {note}
+                  </button>
+                )
+              )}
             </ul>
           </div>
         );

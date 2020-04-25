@@ -1,0 +1,18 @@
+.tab-editor {
+  &__container {
+    background: #060508;
+    height: 40%;
+    cursor: text;
+    overflow: auto;
+
+    button {
+      margin-right: 1rem;
+    }
+  }
+
+  &__code {
+    height: 100%;
+    font-family: monospace;
+    font-size: 2rem;
+  }
+}

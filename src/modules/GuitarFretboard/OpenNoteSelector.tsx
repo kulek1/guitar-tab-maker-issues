@@ -1,10 +1,10 @@
 import React, { useContext, ChangeEvent } from 'react';
-import { OpenNote, Note } from 'types/notes';
+import { NoteInfo, Note } from 'types/notes';
 import { NOTES_PROGRESSION } from 'constants/notes';
 import FretboardContext from './FretboardContext';
 
 type Props = {
-  defaultNote: OpenNote;
+  defaultNote: NoteInfo;
   guitarString: number;
 };
 
@@ -20,12 +20,14 @@ const OpenNoteSelector: React.FC<Props> = ({ defaultNote, guitarString }) => {
 
   return (
     <select defaultValue={defaultValueJoined} onChange={onSelectChange}>
-      {[...Array(OCTAVES_COUNT).keys()].map((idx) => NOTES_PROGRESSION.map((note) => (
-        <option key={`${note}-${idx}`}>
-          {note}
-          {idx}
-        </option>
-      )))}
+      {[...Array(OCTAVES_COUNT).keys()].map((idx) =>
+        NOTES_PROGRESSION.map((note) => (
+          <option key={`${note}-${idx}`}>
+            {note}
+            {idx}
+          </option>
+        ))
+      )}
     </select>
   );
 };
