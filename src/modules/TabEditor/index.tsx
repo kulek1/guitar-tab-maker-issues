@@ -4,6 +4,7 @@ import AppContext from 'AppContext';
 import { getRaw, addNewTablature } from './service';
 import CursorPointer from './CursorPointer';
 import { EditorRef } from './types';
+import { playNotes } from './player';
 
 type Props = {};
 
@@ -32,6 +33,9 @@ const TabEditor: React.FC<Props> = () => {
       </button>
       <button type="button" onClick={() => console.log(editorState.getSelection())}>
         Get selection
+      </button>
+      <button type="button" onClick={() => playNotes(editorState)}>
+        Play
       </button>
       <div className="tab-editor__code" onClick={focusEditor}>
         <Editor ref={editorRef} editorState={editorState} onChange={setEditorState} />

@@ -1,7 +1,7 @@
 import React, { useContext, ChangeEvent } from 'react';
 import { NoteInfo, Note } from 'types/notes';
 import { NOTES_PROGRESSION } from 'constants/notes';
-import FretboardContext from './FretboardContext';
+import AppContext from 'AppContext';
 
 type Props = {
   defaultNote: NoteInfo;
@@ -12,7 +12,7 @@ const OCTAVES_COUNT = 7;
 
 const OpenNoteSelector: React.FC<Props> = ({ defaultNote, guitarString }) => {
   const defaultValueJoined = defaultNote.note + defaultNote.octave;
-  const { setOpenNotes } = useContext(FretboardContext);
+  const { setOpenNotes } = useContext(AppContext);
 
   function onSelectChange({ target }: ChangeEvent<HTMLSelectElement>) {
     setOpenNotes(target.value as Note, guitarString);

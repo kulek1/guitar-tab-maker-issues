@@ -3,7 +3,7 @@ import { Note } from 'types/notes';
 import { MORE_NOTES } from 'constants/notes';
 import { generateOctaveWithNumbers, convertToOpenNote, getNoteWithoutOctave } from 'utils/notes';
 import { play } from 'utils/webAudioPlayer';
-import FretboardContext from './FretboardContext';
+import AppContext from 'AppContext';
 
 type Props = {
   frets: number;
@@ -27,7 +27,7 @@ const generateOctavesWithNumbers = (note: Note, octaveNumber: number, frets: num
 };
 
 const FretNotes: React.FC<Props> = ({ onNoteClick, frets = 12 }) => {
-  const { openNotes } = useContext(FretboardContext);
+  const { openNotes } = useContext(AppContext);
 
   const onNoteClickCallback = (note: string, noteNumber: number, guitarString: string): void => {
     play({

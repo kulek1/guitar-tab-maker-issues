@@ -24,6 +24,21 @@ const NOTES = {
   O: 12, // not sure
 };
 
+export const NUMBER_TO_NOTE = {
+  0: 'C',
+  1: 'C#',
+  2: 'D',
+  3: 'D#',
+  4: 'E',
+  5: 'F',
+  6: 'F#',
+  7: 'G',
+  8: 'G#',
+  9: 'A',
+  10: 'A#',
+  11: 'B',
+};
+
 // 4*12+0 <div class="c4">
 
 export type NotePlayerData = {
@@ -36,6 +51,7 @@ const getPitch = ({ note, octave }: NotePlayerData): number => {
 };
 
 function play(soundData: NotePlayerData) {
+  console.log(soundData);
   player.queueWaveTable(
     audioContext,
     audioContext.destination,
