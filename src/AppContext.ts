@@ -1,13 +1,16 @@
 import React from 'react';
+import { EditorState } from 'draft-js';
 import { TabNote } from 'types/notes';
 
 type AppCtx = {
-  notes: TabNote[];
-  addNote: (TabNote) => void;
+  editorState: EditorState;
+  setEditorState: (state: EditorState) => void;
+  addNote: (note: TabNote) => void;
 };
 
 const AppContext = React.createContext<AppCtx>({
-  notes: [],
+  editorState: EditorState.createEmpty(),
+  setEditorState: () => {},
   addNote: () => {},
 });
 

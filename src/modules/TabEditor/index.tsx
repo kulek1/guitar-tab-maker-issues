@@ -1,7 +1,7 @@
-import React, { useState, useRef, useEffect, useContext, useCallback } from 'react';
-import { Editor, EditorState, convertFromHTML, ContentState, SelectionState } from 'draft-js';
+import React, { useRef, useContext } from 'react';
+import { Editor, EditorState } from 'draft-js';
 import AppContext from 'AppContext';
-import { getEmptyTablature, insertNote, getRaw, addNewTablature } from './service';
+import { getRaw, addNewTablature } from './service';
 import CursorPointer from './CursorPointer';
 import { EditorRef } from './types';
 
@@ -9,29 +9,7 @@ type Props = {};
 
 const TabEditor: React.FC<Props> = () => {
   const editorRef = useRef<EditorRef>(null);
-  const [editorState, setEditorState] = useState<EditorState>(getEmptyTablature());
-  const editorStateCopyRef = useRef<EditorState>(editorState);
-  const { notes } = useContext(AppContext);
-
-  editorStateCopyRef.current = editorState; // useEffect caches useState vars so we need useRef
-
-  // const handleMouseUp = (): void => {
-  //   setTimeout(() => {
-  //     const selection = editorStateCopyRef.current.getSelection();
-  //     setCursorPosition(getCursorPosition(selection));
-  //   }, 0);
-  // };
-
-  // useEffect(
-  //   function getMousePosition() {
-  //     editorRef?.current?.editor.addEventListener('mouseup', handleMouseUp);
-  //     return (): void => {
-  //       editorRef?.current?.editor.removeEventListener('mouseup', handleMouseUp);
-  //     };
-  //   },
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  //   []
-  // );
+  const { editorState, setEditorState } = useContext(AppContext);
 
   function focusEditor(): void {
     if (editorRef.current) {
@@ -40,16 +18,9 @@ const TabEditor: React.FC<Props> = () => {
   }
 
   function addTabBreak() {
-    setEditorState(addNewTablature(editorState));
+    const newState = addNewTablature(editorState);
+    setEditorState(EditorState.moveSelectionToEnd(newState));
   }
-
-  useEffect(() => {
-    if (notes.length) {
-      const state = insertNote(editorState, notes[notes.length - 1]);
-      setEditorState(state);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [notes]);
 
   return (
     <div className="tab-editor__container">
