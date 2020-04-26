@@ -42,9 +42,9 @@ export const getEmptyTablature = (): EditorState => {
 };
 
 export const addNewTablature = (editorState: EditorState): EditorState => {
-  const currentBlocks = RichUtils.insertSoftNewline(EditorState.moveSelectionToEnd(editorState))
-    .getCurrentContent()
-    .getBlocksAsArray();
+  const currentBlocks = editorState.getCurrentContent().getBlocksAsArray();
+
+  const keyForEmptyBlock = genKey();
 
   const newId = id();
   const blocks = EMPTY_TABLATURE.map((word, idx) => {
@@ -58,7 +58,12 @@ export const addNewTablature = (editorState: EditorState): EditorState => {
       }),
     });
   });
-  const contentState = ContentState.createFromBlockArray([...currentBlocks, ...blocks] as any);
+  console.log();
+  const contentState = ContentState.createFromBlockArray([
+    ...currentBlocks,
+    new ContentBlock({ key: keyForEmptyBlock }),
+    ...blocks,
+  ] as any);
 
   return EditorState.push(editorState, contentState, 'insert-fragment');
 };
