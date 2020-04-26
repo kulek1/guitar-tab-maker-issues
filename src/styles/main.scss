@@ -2,6 +2,8 @@
 @import 'global';
 @import 'container';
 
-@import './modules/guitar-fretboard';
-@import './modules/tab-editor';
-@import './modules/cursor-pointer';
+@import 'components/buttons';
+
+@import 'modules/guitar-fretboard';
+@import 'modules/tab-editor';
+@import 'modules/cursor-pointer';
