@@ -2,6 +2,12 @@
   top: 0;
   position: absolute;
   background: red;
+  visibility: hidden;
+  margin-top: 8px;
+
+  &--visible {
+    visibility: visible;
+  }
 
   &__tail {
     position: relative;

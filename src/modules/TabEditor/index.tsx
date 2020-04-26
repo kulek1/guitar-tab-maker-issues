@@ -1,9 +1,9 @@
 import React, { useState, useRef, useEffect, useContext, useCallback } from 'react';
 import { Editor, EditorState, convertFromHTML, ContentState, SelectionState } from 'draft-js';
 import AppContext from 'AppContext';
-import { getEmptyTablature, insertNote, getRaw } from './service';
+import { getEmptyTablature, insertNote, getRaw, addNewTablature } from './service';
 import CursorPointer from './CursorPointer';
-import { CursorPosition, EditorRef } from './types';
+import { EditorRef } from './types';
 
 type Props = {};
 
@@ -14,13 +14,6 @@ const TabEditor: React.FC<Props> = () => {
   const { notes } = useContext(AppContext);
 
   editorStateCopyRef.current = editorState; // useEffect caches useState vars so we need useRef
-
-  function getCursorPosition(selection: SelectionState) {
-    return {
-      focusKey: selection.getFocusKey(),
-      focusOffset: selection.getFocusOffset(),
-    };
-  }
 
   // const handleMouseUp = (): void => {
   //   setTimeout(() => {
@@ -46,6 +39,10 @@ const TabEditor: React.FC<Props> = () => {
     }
   }
 
+  function addTabBreak() {
+    setEditorState(addNewTablature(editorState));
+  }
+
   useEffect(() => {
     if (notes.length) {
       const state = insertNote(editorState, notes[notes.length - 1]);
@@ -59,9 +56,9 @@ const TabEditor: React.FC<Props> = () => {
       <button type="button" onClick={() => getRaw(editorState)}>
         Get RAW
       </button>
-      {/* <button type="button" onClick={insertBlocksFromHtml}>
-        Insert new block from HTML
-      </button> */}
+      <button type="button" onClick={addTabBreak}>
+        Tab break
+      </button>
       <button type="button" onClick={() => console.log(editorState.getSelection())}>
         Get selection
       </button>

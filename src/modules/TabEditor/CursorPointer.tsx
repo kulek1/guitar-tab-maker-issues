@@ -1,8 +1,11 @@
-import React, { useEffect, useCallback, useRef, CSSProperties, useState } from 'react';
-import PropTypes from 'prop-types';
-import { EditorState } from 'draft-js';
-import { CursorPosition, EditorRef } from './types';
-import { getEditorStateWithFocus, checkIfHasTwoNumberNoteInColumn } from './service';
+import React, { useEffect, useCallback, useState } from 'react';
+import { EditorState, ContentBlock } from 'draft-js';
+import {
+  getEditorStateWithFocus,
+  checkIfHasTwoNumberNoteInColumn,
+  hasTablatureSyntax,
+  findGuitarStringsInBlock,
+} from './service';
 
 // https://stackoverflow.com/questions/42646339/monospace-font-with-exactly-15px-height-and-7px-width
 // Font size:
@@ -24,54 +27,70 @@ type Position = {
   top: number;
 };
 
-const spaceChars = ['-', ''];
-
 const previousOffset: number | null = null;
 const previousKey: number | null = null;
 
 const CursorPointer: React.FC<Props> = ({ editorState, setEditorChange }) => {
   const [position, setPosition] = useState<Position>({ left: 0, top: 0 });
+  const [isVisible, setIsVisible] = useState(false);
 
-  const updatePointerPosition = useCallback(() => {
-    const { focusOffset = 0, focusKey } = editorState.getSelection().toObject();
-    if (
-      typeof focusOffset !== 'number' ||
-      previousKey === focusKey ||
-      previousOffset === focusOffset
-    ) {
-      // it prevents from infinite loop
-      return;
-    }
-    const block = editorState.getCurrentContent().getBlockForKey(focusKey);
-    const blockText = block.getText();
+  const updatePointerPosition = useCallback(
+    (selectionObject, block: ContentBlock) => {
+      const { focusOffset = 0, focusKey } = selectionObject;
+      if (
+        typeof focusOffset !== 'number' ||
+        previousKey === focusKey ||
+        previousOffset === focusOffset
+      ) {
+        // it prevents from infinite loop
+        return;
+      }
+      // console.log(block.getKey());
+      let left = 0;
+      let newFocusOffset = focusOffset;
 
-    const focusChar = blockText[focusOffset];
-    const focusNextChar = blockText[focusOffset];
+      const { tabBlocks, firstStringIndex } = findGuitarStringsInBlock(
+        editorState.getCurrentContent(),
+        block
+      );
+      const firstBlockKey = tabBlocks[firstStringIndex].getKey();
 
-    let left = 0;
-    let newFocusOffset = focusOffset;
+      if (checkIfHasTwoNumberNoteInColumn(focusOffset, tabBlocks)) {
+        left = (focusOffset - 1) * FONT_WIDTH_PX - OFFSET;
+        newFocusOffset -= 1;
 
-    if (checkIfHasTwoNumberNoteInColumn(editorState.getCurrentContent(), block, focusOffset)) {
-      left = (focusOffset - 1) * FONT_WIDTH_PX - OFFSET;
-      newFocusOffset -= 1;
+        setEditorChange(getEditorStateWithFocus(editorState, focusKey, newFocusOffset));
+      } else {
+        left = focusOffset * FONT_WIDTH_PX - OFFSET;
+      }
 
-      setEditorChange(getEditorStateWithFocus(editorState, focusKey, newFocusOffset));
-    } else {
-      left = focusOffset * FONT_WIDTH_PX - OFFSET;
-    }
-    setPosition({
-      left,
-      top: 25,
-    });
-  }, [editorState, setEditorChange]);
+      const firstBlockEl = document.querySelector(
+        `div[data-offset-key^="${firstBlockKey}"]`
+      ) as HTMLDivElement;
+      console.log(firstBlockEl);
+      setPosition({
+        left,
+        top: firstBlockEl.offsetTop,
+      });
+    },
+    [editorState, setEditorChange]
+  );
 
   useEffect(() => {
-    updatePointerPosition();
+    const selectionObject = editorState.getSelection().toObject();
+    const selectedBlock = editorState.getCurrentContent().getBlockForKey(selectionObject.focusKey);
+
+    if (hasTablatureSyntax(selectedBlock.getText())) {
+      updatePointerPosition(selectionObject, selectedBlock);
+      setIsVisible(true);
+    } else {
+      setIsVisible(false);
+    }
   }, [editorState, updatePointerPosition]);
 
   return (
     <div
-      className="cursor-pointer"
+      className={`cursor-pointer ${isVisible ? 'cursor-pointer--visible' : ''}`}
       style={{
         left: position.left,
         top: position.top,

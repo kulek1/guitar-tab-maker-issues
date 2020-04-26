@@ -6,6 +6,7 @@ import {
   convertToRaw,
   ContentBlock,
   SelectionState,
+  RichUtils,
 } from 'draft-js';
 import { TabNote } from 'types/notes';
 import { Map } from 'immutable';
@@ -15,11 +16,11 @@ const EMPTY_TABLATURE = ['E', 'B', 'G', 'D', 'A', 'E'];
 
 const TAB_BLOCK_TYPE = 'TabLine';
 
-const TAB_NOTATIONS = ['/', 'h', 'p', 's'];
+const TAB_NOTATIONS = ['/', '\\', 'h', 'p', 's', 'b', 'x', '~'];
 export const hasNoteOrTabNotation = (char: string): boolean =>
   !!Number(char) || TAB_NOTATIONS.includes(char);
 
-const hasTablatureSyntax = (text: string) =>
+export const hasTablatureSyntax = (text: string) =>
   EMPTY_TABLATURE.some((note) => text.startsWith(`${note}|`));
 
 export const getEmptyTablature = (): EditorState => {
@@ -40,12 +41,37 @@ export const getEmptyTablature = (): EditorState => {
   return EditorState.moveSelectionToEnd(initialState);
 };
 
+export const addNewTablature = (editorState: EditorState): EditorState => {
+  const currentBlocks = RichUtils.insertSoftNewline(EditorState.moveSelectionToEnd(editorState))
+    .getCurrentContent()
+    .getBlocksAsArray();
+
+  const newId = id();
+  const blocks = EMPTY_TABLATURE.map((word, idx) => {
+    return new ContentBlock({
+      key: genKey(),
+      type: 'TabLine',
+      text: `${word}|--`,
+      data: Map({
+        guitarString: idx + 1,
+        id: newId,
+      }),
+    });
+  });
+  const contentState = ContentState.createFromBlockArray([...currentBlocks, ...blocks] as any);
+
+  return EditorState.push(editorState, contentState, 'insert-fragment');
+};
+
 export const getRaw = (editorState: EditorState): void => {
   const { blocks } = convertToRaw(editorState.getCurrentContent());
   // console.warn(blocks);
 };
 
-export const findGuitarStringInBlock = (contentState: ContentState, block: ContentBlock) => {
+export const findGuitarStringsInBlock = (
+  contentState: ContentState,
+  block: ContentBlock
+): { tabBlocks: ContentBlock[]; firstStringIndex: number } => {
   const blockData = block.getData();
   const blockKey = block.getKey();
   const tabId = blockData.get('id');
@@ -58,6 +84,7 @@ export const findGuitarStringInBlock = (contentState: ContentState, block: Conte
   // and there's no point of scanning all of them
 
   tabBlocks.push(block);
+  console.warn();
 
   // goes up
   while (counter < 6) {
@@ -83,15 +110,14 @@ export const findGuitarStringInBlock = (contentState: ContentState, block: Conte
     }
   }
 
-  return tabBlocks;
+  const firstStringIndex = blockData.get('guitarString') === 1 ? 0 : 5;
+  return { tabBlocks, firstStringIndex };
 };
 
 export const checkIfHasTwoNumberNoteInColumn = (
-  contentState: ContentState,
-  block: ContentBlock,
-  focusOffset: number
+  focusOffset: number,
+  blocks: ContentBlock[]
 ): boolean => {
-  const blocks = findGuitarStringInBlock(contentState, block);
   const match = blocks.find((lineBlock: ContentBlock) => {
     const text = lineBlock.getText();
     if (hasNoteOrTabNotation(text[focusOffset - 1]) && hasNoteOrTabNotation(text[focusOffset])) {
@@ -100,6 +126,16 @@ export const checkIfHasTwoNumberNoteInColumn = (
     return false;
   });
   return !!match;
+};
+
+export const checkIfHasTwoNumberNoteInColumnByBlock = (
+  contentState: ContentState,
+  focusOffset: number,
+  block: ContentBlock
+): boolean => {
+  const { tabBlocks } = findGuitarStringsInBlock(contentState, block);
+
+  return checkIfHasTwoNumberNoteInColumn(focusOffset, tabBlocks);
 };
 
 export const getTabBlockBasedOnSelection = (
@@ -141,7 +177,7 @@ export const insertNote = (
     const contentState = editorState.getCurrentContent();
 
     const block = getTabBlockBasedOnSelection(selection, contentState);
-    const tabBlocks = findGuitarStringInBlock(contentState, block);
+    const { tabBlocks } = findGuitarStringsInBlock(contentState, block);
 
     let nextEditorState = EditorState.createEmpty();
     let nextContentState = contentState;
