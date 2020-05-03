@@ -10,7 +10,7 @@ type Props = {};
 
 const TabEditor: React.FC<Props> = () => {
   const editorRef = useRef<EditorRef>(null);
-  const { editorState, setEditorState } = useContext(AppContext);
+  const { editorState, setEditorState, openNotes } = useContext(AppContext);
 
   function focusEditor(): void {
     if (editorRef.current) {
@@ -34,7 +34,7 @@ const TabEditor: React.FC<Props> = () => {
       <button type="button" onClick={() => console.log(editorState.getSelection())}>
         Get selection
       </button>
-      <button type="button" onClick={() => playNotes(editorState)}>
+      <button type="button" onClick={() => playNotes(editorState, openNotes)}>
         Play
       </button>
       <div className="tab-editor__code" onClick={focusEditor}>

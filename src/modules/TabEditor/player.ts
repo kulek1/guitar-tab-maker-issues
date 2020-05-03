@@ -1,29 +1,68 @@
-import { EditorState } from 'draft-js';
-import { play, NUMBER_TO_NOTE } from 'utils/webAudioPlayer';
+import { EditorState, ContentBlock } from 'draft-js';
+import { play, NOTES_TO_NUMBER, NUMBER_TO_NOTE, NotePlayerData } from 'utils/webAudioPlayer';
+import { OpenNotes } from 'AppContext';
 import { findGuitarStringsInBlock } from './service';
 
-export const playNotes = (editorState: EditorState) => {
-  console.log('play');
-  const focusKey = editorState.getSelection().getFocusKey();
-  const content = editorState.getCurrentContent();
-  const block = content.getBlockForKey(focusKey);
-
-  const { tabBlocks, firstStringIndex } = findGuitarStringsInBlock(content, block);
-
+function getNotesToPlay(tabBlocks: ContentBlock[], openNotes: OpenNotes): NotePlayerData[] {
   let idx = 2;
+  const maxTabLength = tabBlocks[0].getText().length;
+  const notesToPlay: NotePlayerData[] = [];
 
-  while (idx < 30) {
-    for (let guitarString = 0; guitarString < 6; guitarString += 1) {
-      const char = tabBlocks[guitarString].getText()[idx];
+  // Go column by column to grab notes and convert it into NotePlayerData
+  while (idx < maxTabLength) {
+    for (let guitarStringIdx = 0; guitarStringIdx < 6; guitarStringIdx += 1) {
+      const block = tabBlocks[guitarStringIdx];
+      const textBlock = block.getText();
+      const char = textBlock[idx];
 
-      const charAsNumber = Number(char);
-      if (charAsNumber) {
-        play({
-          note: NUMBER_TO_NOTE[charAsNumber],
-          octave: 1,
+      // Get NotePlayerData from current position in tablature
+      const firstNumber = Number(char);
+      if (Number.isInteger(firstNumber)) {
+        let charAsNumber = firstNumber;
+        if (textBlock[idx + 1]) {
+          charAsNumber = parseInt(`${firstNumber}${textBlock[idx + 1]}`, 10);
+          idx += 1;
+        }
+
+        const guitarString: number = block.getData().get('guitarString');
+        const openNoteOctave = openNotes[guitarString].octave;
+        const openNoteAsNumberInScale = NOTES_TO_NUMBER[openNotes[guitarString].note];
+        const octaveOffset = (openNoteAsNumberInScale + charAsNumber) / 12;
+
+        const note = NUMBER_TO_NOTE[(openNoteAsNumberInScale + charAsNumber) % 12];
+        const octave = Math.floor(openNoteOctave + octaveOffset);
+
+        notesToPlay.push({
+          note,
+          octave,
         });
       }
     }
     idx += 1;
   }
+  return notesToPlay;
+}
+
+export const playNotes = (editorState: EditorState, openNotes: OpenNotes): void => {
+  const focusKey = editorState.getSelection().getFocusKey();
+  const content = editorState.getCurrentContent();
+  const selectedBlock = content.getBlockForKey(focusKey);
+
+  const { tabBlocks } = findGuitarStringsInBlock(content, selectedBlock);
+
+  const notesToPlay: NotePlayerData[] = getNotesToPlay(tabBlocks, openNotes);
+
+  let playIndex = 0;
+  const playLength = notesToPlay.length;
+  const playInterval = setInterval(() => {
+    if (playIndex + 1 >= playLength) {
+      clearInterval(playInterval);
+    }
+    const note = notesToPlay[playIndex];
+    play({
+      note: note.note,
+      octave: note.octave,
+    });
+    playIndex += 1;
+  }, 500);
 };

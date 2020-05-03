@@ -2,7 +2,7 @@ import React from 'react';
 import { EditorState } from 'draft-js';
 import { TabNote, NoteInfo, Note } from 'types/notes';
 
-type OpenNotes = {
+export type OpenNotes = {
   1: NoteInfo;
   2: NoteInfo;
   3: NoteInfo;

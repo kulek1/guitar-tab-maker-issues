@@ -67,7 +67,7 @@ const CursorPointer: React.FC<Props> = ({ editorState, setEditorChange }) => {
       const firstBlockEl = document.querySelector(
         `div[data-offset-key^="${firstBlockKey}"]`
       ) as HTMLDivElement;
-      console.log(firstBlockEl);
+
       setPosition({
         left,
         top: firstBlockEl.offsetTop,

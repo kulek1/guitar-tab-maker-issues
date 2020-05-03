@@ -8,7 +8,7 @@ const player = new WebAudioFontPlayer();
 
 player.adjustPreset(audioContext, _tone_0253_Acoustic_Guitar_sf2_file);
 
-const NOTES = {
+export const NOTES_TO_NUMBER = {
   C: 0,
   'C#': 1,
   D: 2,
@@ -47,7 +47,7 @@ export type NotePlayerData = {
 };
 
 const getPitch = ({ note, octave }: NotePlayerData): number => {
-  return (octave + 1) * 12 + NOTES[note];
+  return (octave + 1) * 12 + NOTES_TO_NUMBER[note];
 };
 
 function play(soundData: NotePlayerData) {
