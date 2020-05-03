@@ -1,5 +1,5 @@
 import React, { useRef, useContext, useState } from 'react';
-import { Editor, EditorState, DraftHandleValue, AtomicBlockUtils } from 'draft-js';
+import { Editor, EditorState, DraftHandleValue, AtomicBlockUtils, ContentState } from 'draft-js';
 import AppContext from 'AppContext';
 import { getRaw, addNewTablature, convertPlainTextToTabBlocks } from './service';
 import CursorPointer from './CursorPointer';
@@ -30,12 +30,32 @@ const TabEditor: React.FC<Props> = () => {
     html: string | undefined,
     editorStateInstance: EditorState
   ): DraftHandleValue {
-    const contentStateWithPastedText = convertPlainTextToTabBlocks(text);
+    const contentBlocksWithPastedText = convertPlainTextToTabBlocks(text);
     const contentState = editorState.getCurrentContent();
 
-    // const entityKey = contentState.getLastCreatedEntityKey();
-    // setEditorState(newEditorStateWithBlock);
-    setEditorState(EditorState.push(editorState, contentStateWithPastedText, 'insert-fragment'));
+    const selectionState = editorState.getSelection();
+    const key = selectionState.getAnchorKey();
+    const blocksBefore = contentState
+      .getBlockMap()
+      .takeUntil((_, k) => k === key)
+      .toArray();
+    const blocksAfter = contentState
+      .getBlockMap()
+      .skipUntil((_, k) => k === key)
+      .skip(1)
+      .toArray();
+
+    const newBlocks = blocksBefore
+      .concat([contentState.getBlockForKey(key)])
+      .concat(contentBlocksWithPastedText)
+      .concat(blocksAfter);
+
+    const newContentState = ContentState.createFromBlockArray(
+      newBlocks,
+      contentState.getEntityMap()
+    );
+
+    setEditorState(EditorState.push(editorState, newContentState, 'insert-fragment'));
     return 'handled';
   }
 

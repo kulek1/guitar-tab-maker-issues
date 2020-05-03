@@ -71,7 +71,7 @@ export const addNewTablature = (editorState: EditorState, openNotes: OpenNotes):
   return EditorState.push(editorState, contentState, 'insert-fragment');
 };
 
-export const convertPlainTextToTabBlocks = (text: string): ContentState => {
+export const convertPlainTextToTabBlocks = (text: string): ContentBlock[] => {
   const textBlocks = text.split(/[\r\n]+/);
   const textBlocksLength = textBlocks.length;
   const contentBlocks: ContentBlock[] = [];
@@ -109,7 +109,7 @@ export const convertPlainTextToTabBlocks = (text: string): ContentState => {
     }
     previousIndex = i;
   }
-  return ContentState.createFromBlockArray(contentBlocks);
+  return contentBlocks;
 };
 
 export const getRaw = (editorState: EditorState): void => {
