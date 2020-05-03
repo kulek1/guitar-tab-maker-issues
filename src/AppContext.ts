@@ -17,6 +17,7 @@ type AppCtx = {
   setEditorState: (state: EditorState) => void;
   addNote: (note: TabNote) => void;
   setOpenNotes: (note: Note, guitarString: number) => void;
+  clearEditorState: () => void;
 };
 
 export const openNotesInitialValue: OpenNotes = {
@@ -50,6 +51,7 @@ const AppContext = React.createContext<AppCtx>({
   editorState: EditorState.createEmpty(),
   openNotes: openNotesInitialValue,
   setEditorState: () => {},
+  clearEditorState: () => {},
   addNote: () => {},
   setOpenNotes: () => {},
 });

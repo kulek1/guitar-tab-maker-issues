@@ -14,7 +14,7 @@ const OpenNoteSelector: React.FC<Props> = ({ defaultNote, guitarString }) => {
   const defaultValueJoined = defaultNote.note + defaultNote.octave;
   const { setOpenNotes } = useContext(AppContext);
 
-  function onSelectChange({ target }: ChangeEvent<HTMLSelectElement>) {
+  function onSelectChange({ target }: ChangeEvent<HTMLSelectElement>): void {
     setOpenNotes(target.value as Note, guitarString);
   }
 

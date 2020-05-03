@@ -11,8 +11,8 @@ import {
 import { TabNote } from 'types/notes';
 import { Map } from 'immutable';
 import { id } from 'utils/id';
-
-const EMPTY_TABLATURE = ['E', 'B', 'G', 'D', 'A', 'E'];
+import { NOTES_PROGRESSION } from 'constants/notes';
+import { OpenNotes } from 'AppContext';
 
 const TAB_BLOCK_TYPE = 'TabLine';
 
@@ -21,11 +21,14 @@ export const hasNoteOrTabNotation = (char: string): boolean =>
   !!Number(char) || TAB_NOTATIONS.includes(char);
 
 export const hasTablatureSyntax = (text: string) =>
-  EMPTY_TABLATURE.some((note) => text.startsWith(`${note}|`));
+  NOTES_PROGRESSION.some((note) => text.startsWith(`${note}|`));
 
-export const getEmptyTablature = (): EditorState => {
+export const getOpenNotesArray = (openNotes: OpenNotes): string[] =>
+  Object.values(openNotes).map((openNote) => openNote.note);
+
+export const getEmptyTablature = (openNotes: OpenNotes): EditorState => {
   const newId = id();
-  const blocks = EMPTY_TABLATURE.map((word, idx) => {
+  const blocks = getOpenNotesArray(openNotes).map((word, idx) => {
     return new ContentBlock({
       key: genKey(),
       type: 'TabLine',
@@ -41,13 +44,13 @@ export const getEmptyTablature = (): EditorState => {
   return EditorState.moveSelectionToEnd(initialState);
 };
 
-export const addNewTablature = (editorState: EditorState): EditorState => {
+export const addNewTablature = (editorState: EditorState, openNotes: OpenNotes): EditorState => {
   const currentBlocks = editorState.getCurrentContent().getBlocksAsArray();
 
   const keyForEmptyBlock = genKey();
 
   const newId = id();
-  const blocks = EMPTY_TABLATURE.map((word, idx) => {
+  const blocks = getOpenNotesArray(openNotes).map((word, idx) => {
     return new ContentBlock({
       key: genKey(),
       type: 'TabLine',
@@ -58,7 +61,7 @@ export const addNewTablature = (editorState: EditorState): EditorState => {
       }),
     });
   });
-  console.log();
+
   const contentState = ContentState.createFromBlockArray([
     ...currentBlocks,
     new ContentBlock({ key: keyForEmptyBlock }),
@@ -68,9 +71,21 @@ export const addNewTablature = (editorState: EditorState): EditorState => {
   return EditorState.push(editorState, contentState, 'insert-fragment');
 };
 
+export const convertPlainTextToTabBlocks = (text: string) => {
+  const textBlocks = text.split(/[\r\n]+/);
+  const textBlocksLength = textBlocks.length;
+  const contentBlocks: ContentBlock[] = [];
+
+  const tabId = id();
+  for (let i = 0; i < textBlocksLength; i++) {
+    // if (textBlocks[i].startsWith()
+  }
+  console.log(textBlocks);
+};
+
 export const getRaw = (editorState: EditorState): void => {
   const { blocks } = convertToRaw(editorState.getCurrentContent());
-  // console.warn(blocks);
+  console.warn(blocks);
 };
 
 export const findGuitarStringsInBlock = (
@@ -204,7 +219,6 @@ export const insertNote = (
         currentGuitarString === guitarString ? `${noteAsString}-` : spaceToAdd
       );
       nextEditorState = EditorState.push(nextEditorState, nextContentState, 'insert-characters');
-      getRaw(nextEditorState);
     });
 
     return getEditorStateWithFocus(

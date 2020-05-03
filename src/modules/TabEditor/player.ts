@@ -43,7 +43,17 @@ function getNotesToPlay(tabBlocks: ContentBlock[], openNotes: OpenNotes): NotePl
   return notesToPlay;
 }
 
-export const playNotes = (editorState: EditorState, openNotes: OpenNotes): void => {
+export const playNotes = async (
+  editorState: EditorState,
+  openNotes: OpenNotes,
+  emptyObject: { cancel?: () => void }
+): Promise<void> => {
+  let isPromiseCancelled = false;
+  // eslint-disable-next-line no-param-reassign
+  emptyObject.cancel = (): void => {
+    isPromiseCancelled = true;
+  };
+
   const focusKey = editorState.getSelection().getFocusKey();
   const content = editorState.getCurrentContent();
   const selectedBlock = content.getBlockForKey(focusKey);
@@ -54,15 +64,20 @@ export const playNotes = (editorState: EditorState, openNotes: OpenNotes): void 
 
   let playIndex = 0;
   const playLength = notesToPlay.length;
-  const playInterval = setInterval(() => {
-    if (playIndex + 1 >= playLength) {
-      clearInterval(playInterval);
-    }
-    const note = notesToPlay[playIndex];
-    play({
-      note: note.note,
-      octave: note.octave,
-    });
-    playIndex += 1;
-  }, 500);
+
+  await new Promise((resolve) => {
+    const playInterval = setInterval(() => {
+      if (playIndex + 1 >= playLength || isPromiseCancelled) {
+        console.warn('CANCEL!!');
+        clearInterval(playInterval);
+        resolve();
+      }
+      const note = notesToPlay[playIndex];
+      play({
+        note: note.note,
+        octave: note.octave,
+      });
+      playIndex += 1;
+    }, 500);
+  });
 };
