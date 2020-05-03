@@ -1,5 +1,5 @@
 import React, { useRef, useContext, useState } from 'react';
-import { Editor, EditorState, DraftHandleValue } from 'draft-js';
+import { Editor, EditorState, DraftHandleValue, AtomicBlockUtils } from 'draft-js';
 import AppContext from 'AppContext';
 import { getRaw, addNewTablature, convertPlainTextToTabBlocks } from './service';
 import CursorPointer from './CursorPointer';
@@ -20,7 +20,7 @@ const TabEditor: React.FC<Props> = () => {
     }
   }
 
-  function addTabBreak() {
+  function addTabBreak(): void {
     const newState = addNewTablature(editorState, openNotes);
     setEditorState(EditorState.moveSelectionToEnd(newState));
   }
@@ -28,9 +28,14 @@ const TabEditor: React.FC<Props> = () => {
   function handlePastedText(
     text: string,
     html: string | undefined,
-    editorState: EditorState
+    editorStateInstance: EditorState
   ): DraftHandleValue {
-    convertPlainTextToTabBlocks(text);
+    const contentStateWithPastedText = convertPlainTextToTabBlocks(text);
+    const contentState = editorState.getCurrentContent();
+
+    // const entityKey = contentState.getLastCreatedEntityKey();
+    // setEditorState(newEditorStateWithBlock);
+    setEditorState(EditorState.push(editorState, contentStateWithPastedText, 'insert-fragment'));
     return 'handled';
   }
 

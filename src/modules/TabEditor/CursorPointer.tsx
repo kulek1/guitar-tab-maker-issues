@@ -45,7 +45,6 @@ const CursorPointer: React.FC<Props> = ({ editorState, setEditorChange }) => {
         // it prevents from infinite loop
         return;
       }
-      // console.log(block.getKey());
       let left = 0;
       let newFocusOffset = focusOffset;
 
@@ -53,7 +52,14 @@ const CursorPointer: React.FC<Props> = ({ editorState, setEditorChange }) => {
         editorState.getCurrentContent(),
         block
       );
-      const firstBlockKey = tabBlocks[firstStringIndex].getKey();
+      const firstBlock = tabBlocks[firstStringIndex];
+
+      if (!firstBlock) {
+        setIsVisible(false);
+        return;
+      }
+
+      const firstBlockKey = firstBlock.getKey();
 
       if (checkIfHasTwoNumberNoteInColumn(focusOffset, tabBlocks)) {
         left = (focusOffset - 1) * FONT_WIDTH_PX - OFFSET;

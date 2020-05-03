@@ -21,7 +21,7 @@ export const hasNoteOrTabNotation = (char: string): boolean =>
   !!Number(char) || TAB_NOTATIONS.includes(char);
 
 export const hasTablatureSyntax = (text: string) =>
-  NOTES_PROGRESSION.some((note) => text.startsWith(`${note}|`));
+  NOTES_PROGRESSION.some((note) => text.toUpperCase().startsWith(`${note}|`));
 
 export const getOpenNotesArray = (openNotes: OpenNotes): string[] =>
   Object.values(openNotes).map((openNote) => openNote.note);
@@ -71,16 +71,45 @@ export const addNewTablature = (editorState: EditorState, openNotes: OpenNotes):
   return EditorState.push(editorState, contentState, 'insert-fragment');
 };
 
-export const convertPlainTextToTabBlocks = (text: string) => {
+export const convertPlainTextToTabBlocks = (text: string): ContentState => {
   const textBlocks = text.split(/[\r\n]+/);
   const textBlocksLength = textBlocks.length;
   const contentBlocks: ContentBlock[] = [];
 
-  const tabId = id();
+  let tabId = id();
+  let newTabGuitarStringCounter = 0;
+  let previousIndex = 0;
   for (let i = 0; i < textBlocksLength; i++) {
-    // if (textBlocks[i].startsWith()
+    if (newTabGuitarStringCounter > 6) {
+      newTabGuitarStringCounter = 0;
+      tabId = id();
+    }
+    if (hasTablatureSyntax(textBlocks[i])) {
+      contentBlocks.push(
+        new ContentBlock({
+          key: genKey(),
+          type: 'TabLine',
+          text: textBlocks[i],
+          data: Map({
+            guitarString: newTabGuitarStringCounter + 1,
+            id: tabId,
+          }),
+        })
+      );
+      newTabGuitarStringCounter += 1;
+    } else if (previousIndex > 0 && previousIndex + 1 !== i) {
+      alert("You're tablature seems to be broken. Please, fix it to be able to paste it.");
+    } else {
+      contentBlocks.push(
+        new ContentBlock({
+          key: genKey(),
+          text: textBlocks[i],
+        })
+      );
+    }
+    previousIndex = i;
   }
-  console.log(textBlocks);
+  return ContentState.createFromBlockArray(contentBlocks);
 };
 
 export const getRaw = (editorState: EditorState): void => {
@@ -104,7 +133,6 @@ export const findGuitarStringsInBlock = (
   // and there's no point of scanning all of them
 
   tabBlocks.push(block);
-  console.warn();
 
   // goes up
   while (counter < 6) {
