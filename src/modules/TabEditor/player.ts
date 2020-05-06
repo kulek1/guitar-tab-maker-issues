@@ -65,10 +65,13 @@ export const playNotes = async (
   let playIndex = 0;
   const playLength = notesToPlay.length;
 
+  if (!playLength) {
+    return;
+  }
+
   await new Promise((resolve) => {
     const playInterval = setInterval(() => {
       if (playIndex + 1 >= playLength || isPromiseCancelled) {
-        console.warn('CANCEL!!');
         clearInterval(playInterval);
         resolve();
       }
