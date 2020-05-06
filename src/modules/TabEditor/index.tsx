@@ -1,4 +1,5 @@
 import React, { useRef, useContext, useState } from 'react';
+import cn from 'classnames';
 import { Editor, EditorState, DraftHandleValue, AtomicBlockUtils, ContentState } from 'draft-js';
 import AppContext from 'AppContext';
 import { getRaw, addNewTablature, convertPlainTextToTabBlocks } from './service';
@@ -12,7 +13,13 @@ const TabEditor: React.FC<Props> = () => {
   const playerStop = useRef<{ cancel: () => void }>({ cancel: () => {} });
   const [isPlaying, setIsPlaing] = useState(false);
   const editorRef = useRef<EditorRef>(null);
-  const { editorState, setEditorState, openNotes } = useContext(AppContext);
+  const {
+    editorState,
+    setEditorState,
+    openNotes,
+    setIsMultipleNotes,
+    isMultipleNotes,
+  } = useContext(AppContext);
 
   function focusEditor(): void {
     if (editorRef.current) {
@@ -84,6 +91,15 @@ const TabEditor: React.FC<Props> = () => {
       </button>
       <button type="button" onClick={handlePlayNotes}>
         {isPlaying ? 'Stop' : 'Play'}
+      </button>
+      <button
+        type="button"
+        onClick={() => setIsMultipleNotes(!isMultipleNotes)}
+        className={cn({
+          active: isMultipleNotes,
+        })}
+      >
+        Multiple (chord) mode
       </button>
       <div className="tab-editor__code" onClick={focusEditor}>
         <Editor

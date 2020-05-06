@@ -3,7 +3,7 @@ import './styles/main.scss';
 import TabEditor from 'modules/TabEditor';
 import AppContext, { openNotesInitialValue } from 'AppContext';
 import { TabNote, Note } from 'types/notes';
-import { EditorState, ContentState } from 'draft-js';
+import { EditorState } from 'draft-js';
 import { getEmptyTablature, insertNote } from 'modules/TabEditor/service';
 import { convertToOpenNote } from 'utils/notes';
 import GuitarFretboard from './modules/GuitarFretboard';
@@ -11,6 +11,7 @@ import GuitarFretboard from './modules/GuitarFretboard';
 function App() {
   const isInit = useRef(true);
   const [openNotes, setOpenNotes] = useState(openNotesInitialValue);
+  const [isMultipleNotes, setIsMultipleNotes] = useState(false);
   const [editorState, setEditorState] = useState<EditorState>(getEmptyTablature(openNotes));
 
   function addNote(note: TabNote): void {
@@ -44,6 +45,8 @@ function App() {
       <AppContext.Provider
         value={{
           editorState,
+          isMultipleNotes,
+          setIsMultipleNotes,
           setEditorState,
           addNote,
           openNotes,
