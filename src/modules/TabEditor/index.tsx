@@ -1,6 +1,6 @@
 import React, { useRef, useContext, useState } from 'react';
 import cn from 'classnames';
-import { Editor, EditorState, DraftHandleValue, AtomicBlockUtils, ContentState } from 'draft-js';
+import { Editor, EditorState, DraftHandleValue, ContentState } from 'draft-js';
 import AppContext from 'AppContext';
 import { getRaw, addNewTablature, convertPlainTextToTabBlocks } from './service';
 import CursorPointer from './CursorPointer';

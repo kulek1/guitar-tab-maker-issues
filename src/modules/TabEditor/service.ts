@@ -214,6 +214,73 @@ export const getEditorStateWithFocus = (
   return EditorState.forceSelection(editorState, newSelectionState as SelectionState);
 };
 
+export const insertMultipleNote = (
+  editorState: EditorState,
+  { noteNumber, guitarString }: TabNote
+) => {
+  try {
+    const selection = editorState.getSelection();
+    const focusOffset = selection.getFocusOffset();
+    const anchorOffset = selection.getAnchorOffset();
+    const contentState = editorState.getCurrentContent();
+
+    const block = getTabBlockBasedOnSelection(selection, contentState);
+    const { tabBlocks } = findGuitarStringsInBlock(contentState, block);
+
+    let nextEditorState = EditorState.createEmpty();
+    let nextContentState = contentState;
+
+    const isFirstNoteInColumn = tabBlocks.some((tabBlock) => {
+      return !tabBlock.getText()[focusOffset];
+    });
+    const noteAsString = noteNumber.toString();
+    const spaceToAdd = noteAsString.length === 2 ? '---' : '--';
+
+    if (isFirstNoteInColumn) {
+      tabBlocks.forEach((tabBlock) => {
+        const selectionState = SelectionState.createEmpty(tabBlock.getKey());
+        const currentGuitarString = tabBlock.getData().get('guitarString');
+        const selectionWithOffset = selectionState.merge({
+          focusOffset,
+          anchorOffset,
+        });
+        nextContentState = Modifier.insertText(
+          nextContentState,
+          selectionWithOffset as SelectionState,
+          currentGuitarString === guitarString ? `${noteAsString}-` : spaceToAdd
+        );
+        nextEditorState = EditorState.push(nextEditorState, nextContentState, 'insert-characters');
+      });
+    } else {
+      const blockToBeReplaced = tabBlocks.find((tabBlock) => {
+        const currentGuitarString = tabBlock.getData().get('guitarString');
+        return guitarString === currentGuitarString;
+      });
+
+      if (!blockToBeReplaced) {
+        throw new Error("Couldn't find a block (multiple notes mode)");
+      }
+      const selectionState = SelectionState.createEmpty(blockToBeReplaced.getKey());
+      const selectionWithOffset = selectionState.merge({
+        focusOffset,
+        anchorOffset,
+      });
+      nextContentState = Modifier.replaceText(
+        nextContentState,
+        selectionWithOffset as SelectionState,
+        noteNumber.toString()
+      );
+      nextEditorState = EditorState.push(nextEditorState, nextContentState, 'insert-characters');
+    }
+
+    return getEditorStateWithFocus(nextEditorState, block.getKey(), focusOffset);
+  } catch (err) {
+    console.error(err);
+    console.log('Should create a new tab instead');
+    return editorState;
+  }
+};
+
 export const insertNote = (
   editorState: EditorState,
   { noteNumber, guitarString }: TabNote
@@ -235,7 +302,6 @@ export const insertNote = (
 
     tabBlocks.forEach((tabBlock) => {
       const selectionState = SelectionState.createEmpty(tabBlock.getKey());
-      // const blockLength = tabBlock.getLength();
       const currentGuitarString = tabBlock.getData().get('guitarString');
       const selectionWithOffset = selectionState.merge({
         focusOffset,

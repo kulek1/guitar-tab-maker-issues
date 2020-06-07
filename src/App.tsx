@@ -4,7 +4,7 @@ import TabEditor from 'modules/TabEditor';
 import AppContext, { openNotesInitialValue } from 'AppContext';
 import { TabNote, Note } from 'types/notes';
 import { EditorState } from 'draft-js';
-import { getEmptyTablature, insertNote } from 'modules/TabEditor/service';
+import { getEmptyTablature, insertNote, insertMultipleNote } from 'modules/TabEditor/service';
 import { convertToOpenNote } from 'utils/notes';
 import GuitarFretboard from './modules/GuitarFretboard';
 
@@ -15,7 +15,10 @@ function App() {
   const [editorState, setEditorState] = useState<EditorState>(getEmptyTablature(openNotes));
 
   function addNote(note: TabNote): void {
-    const state = insertNote(editorState, note);
+    const state = isMultipleNotes
+      ? insertMultipleNote(editorState, note)
+      : insertNote(editorState, note);
+
     setEditorState(state);
   }
 

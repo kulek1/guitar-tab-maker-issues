@@ -86,7 +86,7 @@ const CursorPointer: React.FC<Props> = ({ editorState, setEditorChange }) => {
     const selectionObject = editorState.getSelection().toObject();
     const selectedBlock = editorState.getCurrentContent().getBlockForKey(selectionObject.focusKey);
 
-    if (hasTablatureSyntax(selectedBlock.getText())) {
+    if (selectedBlock && hasTablatureSyntax(selectedBlock.getText())) {
       updatePointerPosition(selectionObject, selectedBlock);
       setIsVisible(true);
     } else {
