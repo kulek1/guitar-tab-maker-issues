@@ -262,7 +262,7 @@ export const insertMultipleNote = (
       }
       const selectionState = SelectionState.createEmpty(blockToBeReplaced.getKey());
       const selectionWithOffset = selectionState.merge({
-        focusOffset,
+        focusOffset: focusOffset + 1,
         anchorOffset,
       });
       nextContentState = Modifier.replaceText(
