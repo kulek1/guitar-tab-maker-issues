@@ -57,8 +57,8 @@ function App() {
           clearEditorState,
         }}
       >
-        <GuitarFretboard />
         <TabEditor />
+        <GuitarFretboard />
       </AppContext.Provider>
     </div>
   );
