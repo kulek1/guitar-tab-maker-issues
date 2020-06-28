@@ -78,6 +78,11 @@ const TabEditor: React.FC<Props> = () => {
     }
   }
 
+  function handleDisablingMultipleNotes(): void {
+    setIsMultipleNotes(!isMultipleNotes);
+    setEditorState(EditorState.moveFocusToEnd(editorState));
+  }
+
   return (
     <div className="tab-editor__container">
       <button type="button" onClick={() => getRaw(editorState)}>
@@ -94,7 +99,9 @@ const TabEditor: React.FC<Props> = () => {
       </button>
       <button
         type="button"
-        onClick={() => setIsMultipleNotes(!isMultipleNotes)}
+        onClick={() =>
+          isMultipleNotes ? handleDisablingMultipleNotes() : setIsMultipleNotes(!isMultipleNotes)
+        }
         className={cn({
           active: isMultipleNotes,
         })}
