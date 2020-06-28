@@ -1,5 +1,4 @@
 import React from 'react';
-import { EditorState } from 'draft-js';
 import { TabNote, NoteInfo, Note } from 'types/notes';
 
 export type OpenNotes = {
@@ -12,11 +11,11 @@ export type OpenNotes = {
 };
 
 type AppCtx = {
-  editorState: EditorState;
+  editorState: null;
   openNotes: OpenNotes;
   isMultipleNotes: boolean;
   setIsMultipleNotes: (flag: boolean) => void;
-  setEditorState: (state: EditorState) => void;
+  setEditorState: (state: null) => void;
   addNote: (note: TabNote) => void;
   setOpenNotes: (note: Note, guitarString: number) => void;
   clearEditorState: () => void;
@@ -50,7 +49,7 @@ export const openNotesInitialValue: OpenNotes = {
 };
 
 const AppContext = React.createContext<AppCtx>({
-  editorState: EditorState.createEmpty(),
+  editorState: null,
   openNotes: openNotesInitialValue,
   isMultipleNotes: false,
   setEditorState: () => {},
