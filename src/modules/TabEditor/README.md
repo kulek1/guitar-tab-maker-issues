@@ -22,7 +22,7 @@ const tablatures = {
     notes: [
       //
       [2, 0, null, null, null, null],
-      [null, null, null, null, null],
+      [null, null, null, null, null, null],
       [1, null, null, null, 3, null],
     ],
   },
@@ -30,8 +30,8 @@ const tablatures = {
     notes: [
       //
       [9, 0, null, null, null, null],
-      [null, 'h', null, null, null],
-      [null, 3, null, null, null],
+      [null, 'h', null, null, null, null],
+      [null, 3, null, null, null, null],
       [null, null, null, null, null],
       [null, null, null, null, null, 1],
       [null, null, null, null, null, null],

@@ -10,12 +10,18 @@ export type OpenNotes = {
   6: NoteInfo;
 };
 
+export type EditorState = {
+  [key: number]: {
+    notes: (number | null)[];
+  };
+};
+
 type AppCtx = {
-  editorState: null;
+  editorState: EditorState;
   openNotes: OpenNotes;
   isMultipleNotes: boolean;
   setIsMultipleNotes: (flag: boolean) => void;
-  setEditorState: (state: null) => void;
+  setEditorState: (state: EditorState) => void;
   addNote: (note: TabNote) => void;
   setOpenNotes: (note: Note, guitarString: number) => void;
   clearEditorState: () => void;
@@ -48,8 +54,14 @@ export const openNotesInitialValue: OpenNotes = {
   },
 };
 
+export const initialEditorState: EditorState = {
+  1: {
+    notes: [],
+  },
+};
+
 const AppContext = React.createContext<AppCtx>({
-  editorState: null,
+  editorState: initialEditorState,
   openNotes: openNotesInitialValue,
   isMultipleNotes: false,
   setEditorState: () => {},

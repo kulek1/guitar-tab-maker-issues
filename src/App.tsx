@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import './styles/main.scss';
 import TabEditor from 'modules/TabEditor';
-import AppContext, { openNotesInitialValue } from 'AppContext';
+import AppContext, { openNotesInitialValue, initialEditorState } from 'AppContext';
 import { TabNote, Note } from 'types/notes';
 import { convertToOpenNote } from 'utils/notes';
 import GuitarFretboard from './modules/GuitarFretboard';
@@ -9,7 +9,7 @@ import GuitarFretboard from './modules/GuitarFretboard';
 function App() {
   const isInit = useRef(true);
   const [openNotes, setOpenNotes] = useState(openNotesInitialValue);
-  const [editorState, setEditorState] = useState(null);
+  const [editorState, setEditorState] = useState(initialEditorState);
   const [isMultipleNotes, setIsMultipleNotes] = useState(false);
 
   function addNote(note: TabNote): void {

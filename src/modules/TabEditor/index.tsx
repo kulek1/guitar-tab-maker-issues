@@ -1,14 +1,15 @@
-import React, { useRef, useContext, useState } from 'react';
+import React, { useRef, useContext, useState, useEffect } from 'react';
 import cn from 'classnames';
 import AppContext from 'AppContext';
 import { EditorRef } from './types';
+import { generateEmptyTablature } from './service';
+import TabColumns from './TabColumns';
 
 type Props = {};
 
 const TabEditor: React.FC<Props> = () => {
   const playerStop = useRef<{ cancel: () => void }>({ cancel: () => {} });
   const [isPlaying, setIsPlaing] = useState(false);
-  const editorRef = useRef<EditorRef>(null);
   const {
     editorState,
     setEditorState,
@@ -16,12 +17,6 @@ const TabEditor: React.FC<Props> = () => {
     setIsMultipleNotes,
     isMultipleNotes,
   } = useContext(AppContext);
-
-  function focusEditor(): void {
-    if (editorRef.current) {
-      editorRef.current.focus();
-    }
-  }
 
   function addTabBreak(): void {
     // const newState = addNewTablature(editorState, openNotes);
@@ -79,6 +74,11 @@ const TabEditor: React.FC<Props> = () => {
     // setEditorState(EditorState.moveFocusToEnd(editorState));
   }
 
+  useEffect(() => {
+    generateEmptyTablature(openNotes);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   return (
     <div className="tab-editor__container">
       <button type="button">Get RAW</button>
@@ -100,7 +100,9 @@ const TabEditor: React.FC<Props> = () => {
       >
         Multiple (chord) mode
       </button>
-      <div>tab</div>
+      <div>
+        <TabColumns />
+      </div>
     </div>
   );
 };
