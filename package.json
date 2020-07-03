@@ -41,7 +41,6 @@
     ]
   },
   "devDependencies": {
-    "@types/draft-js": "^0.10.40",
     "eslint-config-airbnb-typescript": "^7.2.1",
     "eslint-config-prettier": "^6.11.0",
     "eslint-plugin-prettier": "^3.1.3",

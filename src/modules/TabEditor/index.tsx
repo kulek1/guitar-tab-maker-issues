@@ -1,8 +1,7 @@
 import React, { useRef, useContext, useState, useEffect } from 'react';
 import cn from 'classnames';
 import AppContext from 'AppContext';
-import { EditorRef } from './types';
-import { generateEmptyTablature } from './service';
+import { generateEmptyTablature, isSelectionAtEnd } from './service';
 import TabColumns from './TabColumns';
 
 type Props = {};
@@ -13,6 +12,7 @@ const TabEditor: React.FC<Props> = () => {
   const {
     editorState,
     setEditorState,
+    currentTabIndex,
     openNotes,
     setCurrentTabColumn,
     currentTabColumn,
@@ -42,11 +42,13 @@ const TabEditor: React.FC<Props> = () => {
     // setEditorState(EditorState.moveFocusToEnd(editorState));
   }
 
-  function nextColumn() {
+  function nextColumn(): void {
     const currentColumn = parseInt(currentTabColumn, 10);
-    setCurrentTabColumn((currentColumn + 1).toString());
+    if (!isSelectionAtEnd(editorState, currentTabIndex, currentTabColumn)) {
+      setCurrentTabColumn((currentColumn + 1).toString());
+    }
   }
-  function previousColumn() {
+  function previousColumn(): void {
     const currentColumn = parseInt(currentTabColumn, 10);
     if (currentColumn > 0) {
       setCurrentTabColumn((currentColumn - 1).toString());

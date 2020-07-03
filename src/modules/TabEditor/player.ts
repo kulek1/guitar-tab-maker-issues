@@ -1,8 +1,7 @@
-import { EditorState, ContentBlock } from 'draft-js';
 import { play, NOTES_TO_NUMBER, NUMBER_TO_NOTE, NotePlayerData } from 'utils/webAudioPlayer';
 import { OpenNotes } from 'AppContext';
 
-function getNotesToPlay(tabBlocks: ContentBlock[], openNotes: OpenNotes): NotePlayerData[] {
+function getNotesToPlay(tabBlocks: any[], openNotes: OpenNotes): NotePlayerData[] {
   let idx = 2;
   const maxTabLength = tabBlocks[0].getText().length;
   const notesToPlay: NotePlayerData[] = [];

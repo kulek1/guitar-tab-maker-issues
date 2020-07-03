@@ -1,6 +1,4 @@
 import { TabNote } from 'types/notes';
-import { Map } from 'immutable';
-import { id } from 'utils/id';
 import { NOTES_PROGRESSION } from 'constants/notes';
 import { OpenNotes, EditorState } from 'AppContext';
 
@@ -10,7 +8,7 @@ const TAB_NOTATIONS = ['/', '\\', 'h', 'p', 's', 'b', 'x', '~'];
 export const hasNoteOrTabNotation = (char: string): boolean =>
   !!Number(char) || TAB_NOTATIONS.includes(char);
 
-export const hasTablatureSyntax = (text: string) =>
+export const hasTablatureSyntax = (text: string): boolean =>
   NOTES_PROGRESSION.some((note) => text.toUpperCase().startsWith(`${note}|`));
 
 export const getOpenNotesArray = (openNotes: OpenNotes): string[] =>
@@ -36,7 +34,16 @@ export const generateEmptyTablature = (openNotes: OpenNotes): Tablature => {
   };
 };
 
-// {noteNumber: 10, guitarString: 2}
+export const isSelectionAtEnd = (
+  editorState: EditorState,
+  currentTabIndex: string,
+  currentTabColumn: string
+): boolean => {
+  const columnsCounter = editorState[currentTabIndex].notes.length;
+  const currentTabColumnNumber = parseInt(currentTabColumn, 10);
+
+  return columnsCounter <= currentTabColumnNumber + 1;
+};
 
 export const insertNoteToState = ({
   editorState,
