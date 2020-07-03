@@ -12,7 +12,7 @@ export const Column = styled.div`
 
   > span,
   div {
-    width: 13px;
+    width: 16px;
     height: 1em;
     text-align: center;
 
@@ -23,13 +23,15 @@ export const Column = styled.div`
 
   &:hover,
   &:focus {
-    background: red;
-    cursor: pointer;
+    &:not(.static) {
+      background: #914b57;
+      cursor: pointer;
+    }
   }
 
   ${({ active }) =>
     active &&
     css`
-      background: blue;
+      background: #553238;
     `}
 `;
