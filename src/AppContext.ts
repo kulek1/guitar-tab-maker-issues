@@ -12,14 +12,17 @@ export type OpenNotes = {
 
 export type EditorState = {
   [key: number]: {
-    notes: (number | null)[];
+    notes: Array<(number | null)[]>;
   };
 };
 
 type AppCtx = {
   editorState: EditorState;
   openNotes: OpenNotes;
+  currentTabColumn: string;
+  currentTabIndex: string;
   isMultipleNotes: boolean;
+  setCurrentTabColumn: (column: string) => void;
   setIsMultipleNotes: (flag: boolean) => void;
   setEditorState: (state: EditorState) => void;
   addNote: (note: TabNote) => void;
@@ -55,20 +58,25 @@ export const openNotesInitialValue: OpenNotes = {
 };
 
 export const initialEditorState: EditorState = {
-  1: {
-    notes: [],
+  0: {
+    notes: [[null, null, null, null, null, null]],
   },
 };
+
+const emptyFnc = () => {};
 
 const AppContext = React.createContext<AppCtx>({
   editorState: initialEditorState,
   openNotes: openNotesInitialValue,
   isMultipleNotes: false,
-  setEditorState: () => {},
-  setIsMultipleNotes: () => {},
-  clearEditorState: () => {},
-  addNote: () => {},
-  setOpenNotes: () => {},
+  currentTabColumn: '0',
+  currentTabIndex: '0',
+  setCurrentTabColumn: emptyFnc,
+  setEditorState: emptyFnc,
+  setIsMultipleNotes: emptyFnc,
+  clearEditorState: emptyFnc,
+  addNote: emptyFnc,
+  setOpenNotes: emptyFnc,
 });
 
 export default AppContext;

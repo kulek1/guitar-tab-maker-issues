@@ -53,10 +53,26 @@ import { getOpenNotesArray } from './service';
 type Props = {};
 
 const TabColumns: React.FC<Props> = () => {
-  const { openNotes, addNote, editorState } = useContext(AppContext);
+  const {
+    openNotes,
+    addNote,
+    editorState,
+    currentTabColumn,
+    currentTabIndex,
+    setCurrentTabColumn,
+  } = useContext(AppContext);
 
-  function onTablatureClick(event: MouseEvent<HTMLDivElement>, key: string) {
-    console.log('tablature click', key, ' event', event.target);
+  function onTablatureClick(event: MouseEvent<HTMLDivElement>, key): void {
+    const { target } = event;
+
+    if (target) {
+      const column = (target as HTMLDivElement).getAttribute('data-column');
+
+      if (column) {
+        setCurrentTabColumn(column);
+        // setCurrentTabIndex(key);
+      }
+    }
   }
 
   return (
@@ -64,8 +80,9 @@ const TabColumns: React.FC<Props> = () => {
       {Object.keys(editorState).map((key: string) => (
         <S.TabColumns onClick={(e: MouseEvent<HTMLDivElement>) => onTablatureClick(e, key)}>
           <S.Column>
-            {getOpenNotesArray(openNotes).map((note) => (
-              <span>{note}</span>
+            {getOpenNotesArray(openNotes).map((note, idx) => (
+              // eslint-disable-next-line react/no-array-index-key
+              <span key={idx}>{note}</span>
             ))}
           </S.Column>
           <S.Column>
@@ -85,8 +102,8 @@ const TabColumns: React.FC<Props> = () => {
             <span>-</span>
           </S.Column>
           <S.Column />
-          {editorState[key].notes.map((notes, columnIdx) => (
-            <S.Column>
+          {editorState[key].notes.map((notes, columnIdx: number) => (
+            <S.Column active={columnIdx.toString() === currentTabColumn}>
               {notes.map((note, guitarString) => (
                 <div>
                   <span

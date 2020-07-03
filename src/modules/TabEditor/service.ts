@@ -1,18 +1,8 @@
-import {
-  genKey,
-  ContentState,
-  EditorState,
-  Modifier,
-  convertToRaw,
-  ContentBlock,
-  SelectionState,
-  RichUtils,
-} from 'draft-js';
 import { TabNote } from 'types/notes';
 import { Map } from 'immutable';
 import { id } from 'utils/id';
 import { NOTES_PROGRESSION } from 'constants/notes';
-import { OpenNotes } from 'AppContext';
+import { OpenNotes, EditorState } from 'AppContext';
 
 const EMPTY_NOTES_COUNTER = 20;
 
@@ -44,4 +34,43 @@ export const generateEmptyTablature = (openNotes: OpenNotes): Tablature => {
     // @ts-ignore
     notes: generatedNotes,
   };
+};
+
+// {noteNumber: 10, guitarString: 2}
+
+export const insertNoteToState = ({
+  editorState,
+  tablatureIndex,
+  tablatureColumn,
+  note,
+}: {
+  editorState: EditorState;
+  tablatureIndex: string;
+  tablatureColumn: string;
+  note: TabNote;
+}): EditorState => {
+  const newEditorState = JSON.parse(JSON.stringify(editorState));
+
+  const { notes } = newEditorState[tablatureIndex];
+
+  if (notes[tablatureColumn]) {
+    notes[tablatureColumn][note.guitarString - 1] = note.noteNumber;
+
+    // add next column if it is not added
+    const nextIndex = parseInt(tablatureColumn, 10) + 1;
+    if (!notes[nextIndex]) {
+      notes[nextIndex] = [null, null, null, null, null, null];
+    }
+  } else {
+    // console.log('xd', tablatureColumn);
+    let currentColumn = notes[tablatureColumn];
+    console.log(currentColumn);
+    if (!currentColumn) {
+      currentColumn = [null, null, null, null, null, null];
+    }
+    currentColumn[note.guitarString - 1] = note.noteNumber;
+  }
+  // console.warn(newEditorState);
+  // newEditorState[tablatureIndex].notes[tablatureColumn][note.guitarString - 1] = note.noteNumber;
+  return newEditorState;
 };

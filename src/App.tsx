@@ -4,15 +4,34 @@ import TabEditor from 'modules/TabEditor';
 import AppContext, { openNotesInitialValue, initialEditorState } from 'AppContext';
 import { TabNote, Note } from 'types/notes';
 import { convertToOpenNote } from 'utils/notes';
+import { insertNoteToState } from 'modules/TabEditor/service';
 import GuitarFretboard from './modules/GuitarFretboard';
 
 function App() {
   const isInit = useRef(true);
+  const [currentTabColumn, setCurrentTabColumn] = useState('0');
+  const [currentTabIndex, setCurrentTabIndex] = useState('0');
   const [openNotes, setOpenNotes] = useState(openNotesInitialValue);
   const [editorState, setEditorState] = useState(initialEditorState);
   const [isMultipleNotes, setIsMultipleNotes] = useState(false);
 
   function addNote(note: TabNote): void {
+    const newState = insertNoteToState({
+      editorState,
+      tablatureIndex: currentTabIndex,
+      tablatureColumn: currentTabColumn,
+      note,
+    });
+    setEditorState(newState);
+    const columnsCounter = editorState[currentTabIndex].notes.length;
+    const currentTabColumnNumber = parseInt(currentTabColumn, 10);
+
+    console.log(columnsCounter, currentTabColumnNumber);
+    if (columnsCounter <= currentTabColumnNumber + 1) {
+      const nextColumn = (currentTabColumnNumber + 1).toString();
+      console.warn('XD', nextColumn);
+      setCurrentTabColumn(nextColumn);
+    }
     // const state = isMultipleNotes
     //   ? insertMultipleNote(editorState, note)
     //   : insertNote(editorState, note);
@@ -44,6 +63,9 @@ function App() {
         value={{
           editorState,
           isMultipleNotes,
+          currentTabColumn,
+          currentTabIndex,
+          setCurrentTabColumn,
           setIsMultipleNotes,
           setEditorState,
           addNote,

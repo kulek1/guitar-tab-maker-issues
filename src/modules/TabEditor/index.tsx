@@ -14,6 +14,8 @@ const TabEditor: React.FC<Props> = () => {
     editorState,
     setEditorState,
     openNotes,
+    setCurrentTabColumn,
+    currentTabColumn,
     setIsMultipleNotes,
     isMultipleNotes,
   } = useContext(AppContext);
@@ -22,40 +24,6 @@ const TabEditor: React.FC<Props> = () => {
     // const newState = addNewTablature(editorState, openNotes);
     // setEditorState(EditorState.moveSelectionToEnd(newState));
   }
-
-  // function handlePastedText(
-  //   text: string,
-  //   html: string | undefined,
-  //   editorStateInstance: EditorState
-  // ): DraftHandleValue {
-  //   const contentBlocksWithPastedText = convertPlainTextToTabBlocks(text);
-  //   const contentState = editorState.getCurrentContent();
-
-  //   const selectionState = editorState.getSelection();
-  //   const key = selectionState.getAnchorKey();
-  //   const blocksBefore = contentState
-  //     .getBlockMap()
-  //     .takeUntil((_, k) => k === key)
-  //     .toArray();
-  //   const blocksAfter = contentState
-  //     .getBlockMap()
-  //     .skipUntil((_, k) => k === key)
-  //     .skip(1)
-  //     .toArray();
-
-  //   const newBlocks = blocksBefore
-  //     .concat([contentState.getBlockForKey(key)])
-  //     .concat(contentBlocksWithPastedText)
-  //     .concat(blocksAfter);
-
-  //   const newContentState = ContentState.createFromBlockArray(
-  //     newBlocks,
-  //     contentState.getEntityMap()
-  //   );
-
-  //   setEditorState(EditorState.push(editorState, newContentState, 'insert-fragment'));
-  //   return 'handled';
-  // }
 
   async function handlePlayNotes(): Promise<void> {
     if (isPlaying) {
@@ -72,6 +40,17 @@ const TabEditor: React.FC<Props> = () => {
   function handleDisablingMultipleNotes(): void {
     setIsMultipleNotes(!isMultipleNotes);
     // setEditorState(EditorState.moveFocusToEnd(editorState));
+  }
+
+  function nextColumn() {
+    const currentColumn = parseInt(currentTabColumn, 10);
+    setCurrentTabColumn((currentColumn + 1).toString());
+  }
+  function previousColumn() {
+    const currentColumn = parseInt(currentTabColumn, 10);
+    if (currentColumn > 0) {
+      setCurrentTabColumn((currentColumn - 1).toString());
+    }
   }
 
   useEffect(() => {
@@ -99,6 +78,12 @@ const TabEditor: React.FC<Props> = () => {
         })}
       >
         Multiple (chord) mode
+      </button>
+      <button type="button" onClick={previousColumn}>
+        {'<'}
+      </button>
+      <button type="button" onClick={nextColumn}>
+        {'>'}
       </button>
       <div>
         <TabColumns />
