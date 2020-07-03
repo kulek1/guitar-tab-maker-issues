@@ -3,6 +3,7 @@ import cn from 'classnames';
 import AppContext from 'AppContext';
 import { generateEmptyTablature, isSelectionAtEnd } from './service';
 import TabColumns from './TabColumns';
+import { playNotes } from './player';
 
 type Props = {};
 
@@ -11,7 +12,6 @@ const TabEditor: React.FC<Props> = () => {
   const [isPlaying, setIsPlaing] = useState(false);
   const {
     editorState,
-    setEditorState,
     currentTabIndex,
     openNotes,
     setCurrentTabColumn,
@@ -32,7 +32,7 @@ const TabEditor: React.FC<Props> = () => {
     } else {
       setIsPlaing(true);
 
-      // await playNotes(editorState, openNotes, playerStop.current);
+      await playNotes(editorState, currentTabIndex, openNotes, playerStop.current);
       setIsPlaing(false);
     }
   }

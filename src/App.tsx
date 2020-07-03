@@ -27,13 +27,8 @@ function App() {
     if (isSelectionAtEnd(editorState, currentTabIndex, currentTabColumn)) {
       const currentTabColumnNumber = parseInt(currentTabColumn, 10);
       const nextColumn = (currentTabColumnNumber + 1).toString();
-      console.warn('XD', nextColumn);
       setCurrentTabColumn(nextColumn);
     }
-    // const state = isMultipleNotes
-    //   ? insertMultipleNote(editorState, note)
-    //   : insertNote(editorState, note);
-    // setEditorState(state);
   }
 
   function setOpenNote(note: Note, guitarString: number): void {
