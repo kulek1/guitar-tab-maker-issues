@@ -1,13 +1,19 @@
 import React, { useState, useEffect, useRef } from 'react';
 import './styles/main.scss';
-import AppContext, { openNotesInitialValue, initialEditorState, EditorState } from 'AppContext';
+import AppContext, {
+  openNotesInitialValue,
+  initialEditorState,
+  EditorState,
+  EditorStateEntry,
+} from 'AppContext';
 import { TabNote, Note } from 'types/notes';
 import { convertToOpenNote } from 'utils/notes';
 import { insertNoteToState, isSelectionAtEnd } from 'modules/TabEditor/service';
 import MainLayout from 'layout/MainLayout';
 import { playNotes } from 'modules/TabEditor/player';
+import { saveToHistory, getHistory, removeLastElementFromHistory } from 'utils/localStorage';
 
-function App() {
+const App: React.FC<{}> = () => {
   const isInit = useRef(true);
   const [currentTabColumn, setCurrentTabColumn] = useState('0');
   const [currentTabIndex, setCurrentTabIndex] = useState('0');
@@ -26,6 +32,11 @@ function App() {
       tablatureColumn: currentTabColumn,
       note,
     });
+    const currentTablature: EditorStateEntry = editorState[currentTabIndex];
+    if (currentTablature) {
+      const previousNote = currentTablature.notes[currentTabColumn][note.guitarString - 1];
+      saveToHistory(previousNote, note, currentTabIndex, currentTabColumn);
+    }
     setEditorState(newState);
 
     if (isSelectionAtEnd(editorState, currentTabIndex, currentTabColumn)) {
@@ -42,7 +53,29 @@ function App() {
     }));
   }
 
-  function clearEditorState() {}
+  function clearEditorState(): void {}
+
+  function goBack(): boolean {
+    const history = getHistory();
+    if (!history) {
+      return false;
+    }
+    const latestEntry = history[history.length - 1];
+
+    const newState = insertNoteToState({
+      editorState,
+      tablatureIndex: latestEntry.tablatureIndex,
+      tablatureColumn: latestEntry.tablatureColumn,
+      note: {
+        guitarString: latestEntry.guitarString,
+        noteNumber: latestEntry.previousNote,
+      },
+    });
+    removeLastElementFromHistory();
+
+    setEditorState(newState);
+    return true;
+  }
 
   async function handlePlayNotes(): Promise<void> {
     if (isPlaying) {
@@ -82,12 +115,13 @@ function App() {
           clearEditorState,
           onPlayClick: handlePlayNotes,
           isPlaying,
+          goBack,
         }}
       >
         <MainLayout />
       </AppContext.Provider>
     </div>
   );
-}
+};
 
 export default App;

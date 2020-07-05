@@ -114,6 +114,10 @@ export const HiddenMenu = styled.div<{}>`
   ${({ opened }) =>
     opened &&
     css`
-      height: 60vh;
+      height: 350px;
+
+      @media screen and (min-width: 400px) and (min-height: 450px) {
+        height: 300px;
+      }
     `}
 `;

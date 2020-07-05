@@ -11,6 +11,7 @@ import { ReactComponent as ArrowIcon } from 'assets/icons/arrow-forward-outline.
 import AppContext from 'AppContext';
 import { isSelectionAtEnd, clearColumn, removeTablature } from 'modules/TabEditor/service';
 import * as S from './styles';
+import HiddenMenu from './HiddenMenu';
 
 const ActionBar: React.FC<{}> = () => {
   const [isMenu, setIsMenu] = useState(false);
@@ -22,6 +23,7 @@ const ActionBar: React.FC<{}> = () => {
     setCurrentTabColumn,
     editorState,
     setEditorState,
+    goBack,
   } = useContext(AppContext);
 
   function nextColumn(): void {
@@ -48,7 +50,9 @@ const ActionBar: React.FC<{}> = () => {
 
   return (
     <S.Sticky>
-      <S.HiddenMenu opened={isMenu}>test</S.HiddenMenu>
+      <S.HiddenMenu opened={isMenu}>
+        <HiddenMenu />
+      </S.HiddenMenu>
       <S.Wrapper>
         <S.Btn type="button" title="remove selected tablature" onClick={handleClearTablature}>
           <BinIcon />
@@ -56,7 +60,7 @@ const ActionBar: React.FC<{}> = () => {
         <S.Btn type="button" title="clear selected column" onClick={handleClearColumnClick}>
           <CloseIcon />
         </S.Btn>
-        <S.Btn type="button" title="restore last change">
+        <S.Btn type="button" title="restore last change" onClick={goBack}>
           <RefreshIcon />
         </S.Btn>
         <S.MainBtn type="button" title="see more options" onClick={() => setIsMenu(!isMenu)}>

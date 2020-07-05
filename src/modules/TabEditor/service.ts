@@ -45,6 +45,12 @@ export const isSelectionAtEnd = (
   return columnsCounter <= currentTabColumnNumber + 1;
 };
 
+// for history (goBack())
+type TabNoteWithString = {
+  guitarString: number;
+  noteNumber: string | number;
+};
+
 export const insertNoteToState = ({
   editorState,
   tablatureIndex,
@@ -54,7 +60,7 @@ export const insertNoteToState = ({
   editorState: EditorState;
   tablatureIndex: string;
   tablatureColumn: string;
-  note: TabNote;
+  note: TabNoteWithString;
 }): EditorState => {
   const newEditorState = JSON.parse(JSON.stringify(editorState));
 

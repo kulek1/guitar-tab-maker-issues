@@ -10,10 +10,12 @@ export type OpenNotes = {
   6: NoteInfo;
 };
 
+export type EditorStateEntry = {
+  notes: Array<(number | null)[]>;
+};
+
 export type EditorState = {
-  [key: number]: {
-    notes: Array<(number | null)[]>;
-  };
+  [key: number]: EditorStateEntry;
 };
 
 type AppCtx = {
@@ -30,6 +32,7 @@ type AppCtx = {
   setOpenNotes: (note: Note, guitarString: number) => void;
   clearEditorState: () => void;
   onPlayClick: () => void;
+  goBack: () => void;
 };
 
 export const openNotesInitialValue: OpenNotes = {
@@ -81,6 +84,7 @@ const AppContext = React.createContext<AppCtx>({
   addNote: emptyFnc,
   setOpenNotes: emptyFnc,
   onPlayClick: emptyFnc,
+  goBack: emptyFnc,
 });
 
 export default AppContext;

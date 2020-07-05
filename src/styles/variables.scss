@@ -4,6 +4,7 @@ $color-secondary: #b5bccf;
 
 $color-text-primary: #fff;
 
+$screen-xs-min: 390px;
 $screen-sm-min: 576px;
 $screen-md-min: 768px;
 $screen-lg-min: 992px;
@@ -12,4 +13,9 @@ $screen-xl-min: 1200px;
 :root {
   --primary: #2549fa;
   --secondary: #aabee3;
+  --screen-xs: 390px;
+  --screen-sm: 576px;
+  --screen-md: 768px;
+  --screen-lg: 992px;
+  --screen-xl: 1200px;
 }
