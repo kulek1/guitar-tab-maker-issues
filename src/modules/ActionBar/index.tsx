@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import { ReactComponent as AddIcon } from 'assets/icons/add-outline.svg';
 import { ReactComponent as BinIcon } from 'assets/icons/bin.svg';
 import { ReactComponent as RefreshIcon } from 'assets/icons/refresh.svg';
@@ -13,6 +13,7 @@ import { isSelectionAtEnd, clearColumn, removeTablature } from 'modules/TabEdito
 import * as S from './styles';
 
 const ActionBar: React.FC<{}> = () => {
+  const [isMenu, setIsMenu] = useState(false);
   const {
     isPlaying,
     onPlayClick,
@@ -47,6 +48,7 @@ const ActionBar: React.FC<{}> = () => {
 
   return (
     <S.Sticky>
+      <S.HiddenMenu opened={isMenu}>test</S.HiddenMenu>
       <S.Wrapper>
         <S.Btn type="button" title="remove selected tablature" onClick={handleClearTablature}>
           <BinIcon />
@@ -57,7 +59,7 @@ const ActionBar: React.FC<{}> = () => {
         <S.Btn type="button" title="restore last change">
           <RefreshIcon />
         </S.Btn>
-        <S.MainBtn type="button" title="see more options">
+        <S.MainBtn type="button" title="see more options" onClick={() => setIsMenu(!isMenu)}>
           <AddIcon />
         </S.MainBtn>
         <S.Btn

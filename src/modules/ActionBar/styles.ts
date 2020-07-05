@@ -21,6 +21,7 @@ export const Wrapper = styled.div`
   box-shadow: 0px 0px 16px 0px rgba(160, 160, 160, 0.5);
   border-radius: 25px;
   background: #fff;
+  position: relative;
 `;
 
 export const Btn = styled.button<{ rotate?: boolean; active?: boolean }>`
@@ -94,4 +95,25 @@ export const MainBtn = styled(Btn)`
 
 export const Pause = styled(PauseIcon)`
   width: 20px;
+`;
+
+export const HiddenMenu = styled.div<{}>`
+  transition: all ease 0.6s;
+  background: #fff;
+  width: 100%;
+  height: 0px;
+  position: absolute;
+  bottom: 0px;
+  left: 0;
+  will-change: height;
+  /* border-top-left-radius: 25px;
+  border-top-right-radius: 25px; */
+  border-radius: 25px;
+  box-shadow: 0px 0px 16px 0px rgba(160, 160, 160, 0.5);
+
+  ${({ opened }) =>
+    opened &&
+    css`
+      height: 60vh;
+    `}
 `;
