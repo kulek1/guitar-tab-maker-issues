@@ -22,12 +22,14 @@ type AppCtx = {
   currentTabColumn: string;
   currentTabIndex: string;
   isMultipleNotes: boolean;
+  isPlaying: boolean;
   setCurrentTabColumn: (column: string) => void;
   setIsMultipleNotes: (flag: boolean) => void;
   setEditorState: (state: EditorState) => void;
   addNote: (note: TabNote) => void;
   setOpenNotes: (note: Note, guitarString: number) => void;
   clearEditorState: () => void;
+  onPlayClick: () => void;
 };
 
 export const openNotesInitialValue: OpenNotes = {
@@ -71,12 +73,14 @@ const AppContext = React.createContext<AppCtx>({
   isMultipleNotes: false,
   currentTabColumn: '0',
   currentTabIndex: '0',
+  isPlaying: false,
   setCurrentTabColumn: emptyFnc,
   setEditorState: emptyFnc,
   setIsMultipleNotes: emptyFnc,
   clearEditorState: emptyFnc,
   addNote: emptyFnc,
   setOpenNotes: emptyFnc,
+  onPlayClick: emptyFnc,
 });
 
 export default AppContext;

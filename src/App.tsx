@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
 import './styles/main.scss';
-import TabEditor from 'modules/TabEditor';
 import AppContext, { openNotesInitialValue, initialEditorState, EditorState } from 'AppContext';
 import { TabNote, Note } from 'types/notes';
 import { convertToOpenNote } from 'utils/notes';
 import { insertNoteToState, isSelectionAtEnd } from 'modules/TabEditor/service';
-import GuitarFretboard from './modules/GuitarFretboard';
+import MainLayout from 'layout/MainLayout';
+import { playNotes } from 'modules/TabEditor/player';
 
 function App() {
   const isInit = useRef(true);
@@ -14,6 +14,10 @@ function App() {
   const [openNotes, setOpenNotes] = useState(openNotesInitialValue);
   const [editorState, setEditorState] = useState<EditorState>(initialEditorState);
   const [isMultipleNotes, setIsMultipleNotes] = useState(false);
+
+  // player
+  const playerStop = useRef<{ cancel: () => void }>({ cancel: () => {} });
+  const [isPlaying, setIsPlaing] = useState(false);
 
   function addNote(note: TabNote): void {
     const newState = insertNoteToState({
@@ -40,6 +44,18 @@ function App() {
 
   function clearEditorState() {}
 
+  async function handlePlayNotes(): Promise<void> {
+    if (isPlaying) {
+      setIsPlaing(false);
+      playerStop.current.cancel();
+    } else {
+      setIsPlaing(true);
+
+      await playNotes(editorState, currentTabIndex, openNotes, playerStop.current);
+      setIsPlaing(false);
+    }
+  }
+
   useEffect(() => {
     if (isInit.current) {
       isInit.current = false;
@@ -51,7 +67,6 @@ function App() {
 
   return (
     <div className="container">
-      <header className="header">Guitar</header>
       <AppContext.Provider
         value={{
           editorState,
@@ -65,10 +80,11 @@ function App() {
           openNotes,
           setOpenNotes: setOpenNote,
           clearEditorState,
+          onPlayClick: handlePlayNotes,
+          isPlaying,
         }}
       >
-        <TabEditor />
-        <GuitarFretboard />
+        <MainLayout />
       </AppContext.Provider>
     </div>
   );

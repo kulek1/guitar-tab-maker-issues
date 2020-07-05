@@ -69,15 +69,29 @@ export const insertNoteToState = ({
       notes[nextIndex] = [null, null, null, null, null, null];
     }
   } else {
-    // console.log('xd', tablatureColumn);
     let currentColumn = notes[tablatureColumn];
-    console.log(currentColumn);
     if (!currentColumn) {
       currentColumn = [null, null, null, null, null, null];
     }
     currentColumn[note.guitarString - 1] = note.noteNumber;
   }
-  // console.warn(newEditorState);
-  // newEditorState[tablatureIndex].notes[tablatureColumn][note.guitarString - 1] = note.noteNumber;
+  return newEditorState;
+};
+
+export const clearColumn = (
+  editorState: EditorState,
+  tablatureIndex: string,
+  tablatureColumn: string
+): EditorState => {
+  const newEditorState = JSON.parse(JSON.stringify(editorState));
+  newEditorState[tablatureIndex].notes[tablatureColumn] = [null, null, null, null, null, null];
+  return newEditorState;
+};
+
+export const removeTablature = (editorState: EditorState, tablatureIndex: string): EditorState => {
+  const newEditorState = JSON.parse(JSON.stringify(editorState));
+  newEditorState[tablatureIndex] = {
+    notes: [[null, null, null, null, null, null]],
+  };
   return newEditorState;
 };

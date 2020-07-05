@@ -1,10 +1,11 @@
 .tab-editor {
   &__container {
     position: relative;
-    background: #060508;
-    height: 40%;
+    background: $color-bg;
+    flex: 0.4;
     cursor: text;
     overflow: auto;
+    color: #000;
 
     button {
       margin-right: 1rem;

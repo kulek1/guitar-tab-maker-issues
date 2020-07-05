@@ -4,7 +4,14 @@ export const TabColumns = styled.div`
   display: flex;
   margin-bottom: 20px;
   flex-wrap: nowrap;
+  font-family: 'Source Code Pro', sans-serif;
+  font-weight: 600;
 `;
+
+export const TabColumnsWrapper = styled.div`
+  padding: 0 1em;
+`;
+
 export const Column = styled.div`
   display: flex;
   flex-direction: column;
@@ -24,7 +31,7 @@ export const Column = styled.div`
   &:hover,
   &:focus {
     &:not(.static) {
-      background: #914b57;
+      background: #aabee3;
       cursor: pointer;
     }
   }
@@ -32,6 +39,6 @@ export const Column = styled.div`
   ${({ active }) =>
     active &&
     css`
-      background: #553238;
+      background: #eaeff7;
     `}
 `;
