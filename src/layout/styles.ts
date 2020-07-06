@@ -8,4 +8,8 @@ export const CardBackground = styled.div`
   flex: 0.6;
   border-top-left-radius: 50px;
   border-top-right-radius: 50px;
+
+  @media print {
+    display: none;
+  }
 `;

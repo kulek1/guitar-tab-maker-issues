@@ -22,6 +22,10 @@ export const Wrapper = styled.div`
   border-radius: 25px;
   background: #fff;
   position: relative;
+
+  @media print {
+    display: none;
+  }
 `;
 
 export const Btn = styled.button<{ rotate?: boolean; active?: boolean }>`

@@ -1,4 +1,7 @@
 .tab-editor {
+  @media print {
+    display: none;
+  }
   &__container {
     position: relative;
     background: $color-bg;

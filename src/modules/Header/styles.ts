@@ -9,4 +9,10 @@ export const Header = styled.header`
   padding: 1em;
   display: flex;
   justify-content: space-between;
+
+  svg {
+    @media print {
+      display: none;
+    }
+  }
 `;
