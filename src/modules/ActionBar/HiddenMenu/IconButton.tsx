@@ -5,11 +5,12 @@ type Props = {
   icon: ReactNode;
   label?: string;
   secondary?: boolean;
+  onClick?: () => void;
 };
 
-const IconButton: React.FC<Props> = ({ icon, label, secondary }) => {
+const IconButton: React.FC<Props> = ({ icon, label, secondary, onClick }) => {
   return (
-    <S.IconButton secondary={secondary}>
+    <S.IconButton secondary={secondary} onClick={onClick}>
       <div>{icon}</div>
       {label && <p>{label}</p>}
     </S.IconButton>

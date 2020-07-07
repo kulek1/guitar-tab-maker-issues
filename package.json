@@ -10,14 +10,20 @@
     "@types/node": "^12.0.0",
     "@types/react": "^16.9.34",
     "@types/react-dom": "^16.9.6",
+    "add": "^2.0.6",
     "classnames": "^2.2.6",
+    "html2canvas": "^1.0.0-rc.5",
     "immutable": "^4.0.0-rc.12",
+    "pdfkit": "^0.11.0",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-scripts": "3.4.1",
     "styled-components": "^5.1.1",
+    "svg-to-pdfkit": "^0.1.8",
     "typescript": "~3.8.3",
-    "webaudiofont": "^2.5.49"
+    "vextab": "^3.0.6",
+    "webaudiofont": "^2.5.49",
+    "yarn": "^1.22.4"
   },
   "scripts": {
     "start": "react-scripts start",

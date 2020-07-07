@@ -12,6 +12,7 @@ import { insertNoteToState, isSelectionAtEnd } from 'modules/TabEditor/service';
 import MainLayout from 'layout/MainLayout';
 import { playNotes } from 'modules/TabEditor/player';
 import { saveToHistory, getHistory, removeLastElementFromHistory } from 'utils/localStorage';
+import TabPreview from 'components/TabPreview';
 
 const App: React.FC<{}> = () => {
   const isInit = useRef(true);
@@ -119,6 +120,7 @@ const App: React.FC<{}> = () => {
         }}
       >
         <MainLayout />
+        <TabPreview />
       </AppContext.Provider>
     </div>
   );
