@@ -1,17 +1,24 @@
-import { play, NOTES_TO_NUMBER, NUMBER_TO_NOTE, NotePlayerData } from 'utils/webAudioPlayer';
+import {
+  play,
+  NOTES_TO_NUMBER,
+  NUMBER_TO_NOTE,
+  NotePlayerData,
+  playChord,
+} from 'utils/webAudioPlayer';
 import { OpenNotes, EditorState } from 'AppContext';
 
 function getNotesToPlay(
   editorState: EditorState,
   currentTabIndex: string,
   openNotes: OpenNotes
-): NotePlayerData[] {
+): NotePlayerData[][] {
   let idx = 0;
   const maxTabLength = editorState[currentTabIndex].notes.length;
-  const notesToPlay: NotePlayerData[] = [];
+  const notesToPlay: NotePlayerData[][] = [];
 
   // Go column by column to grab notes and convert it into NotePlayerData
   while (idx < maxTabLength) {
+    const columnNotes: NotePlayerData[] = [];
     for (let guitarStringIdx = 0; guitarStringIdx < 6; guitarStringIdx += 1) {
       const currentNote = editorState[currentTabIndex].notes[idx][guitarStringIdx];
       // Get NotePlayerData from current position in tablature
@@ -25,12 +32,13 @@ function getNotesToPlay(
         const note = NUMBER_TO_NOTE[(openNoteAsNumberInScale + charAsNumber) % 12];
         const octave = Math.floor(openNoteOctave + octaveOffset);
 
-        notesToPlay.push({
+        columnNotes.push({
           note,
           octave,
         });
       }
     }
+    notesToPlay.push(columnNotes);
     idx += 1;
   }
   return notesToPlay;
@@ -47,7 +55,7 @@ export const playNotes = async (
   emptyObject.cancel = (): void => {
     isPromiseCancelled = true;
   };
-  const notesToPlay: NotePlayerData[] = getNotesToPlay(editorState, currentTabIndex, openNotes);
+  const notesToPlay: NotePlayerData[][] = getNotesToPlay(editorState, currentTabIndex, openNotes);
 
   let playIndex = 0;
   const playLength = notesToPlay.length;
@@ -62,12 +70,18 @@ export const playNotes = async (
         clearInterval(playInterval);
         resolve();
       }
-      const note = notesToPlay[playIndex];
-      play({
-        note: note.note,
-        octave: note.octave,
-      });
+      const notes = notesToPlay[playIndex];
+
+      if (notes.length === 1) {
+        play({
+          note: notes[0].note,
+          octave: notes[0].octave,
+        });
+      } else {
+        playChord(notes);
+      }
+
       playIndex += 1;
-    }, 500);
+    }, 400);
   });
 };

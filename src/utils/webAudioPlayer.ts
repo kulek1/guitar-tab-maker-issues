@@ -50,8 +50,11 @@ const getPitch = ({ note, octave }: NotePlayerData): number => {
   return (octave + 1) * 12 + NOTES_TO_NUMBER[note];
 };
 
-function play(soundData: NotePlayerData) {
-  console.log(soundData);
+function pitches(frets: NotePlayerData[]): number[] {
+  return frets.map((noteData) => getPitch(noteData));
+}
+
+function play(soundData: NotePlayerData): boolean {
   player.queueWaveTable(
     audioContext,
     audioContext.destination,
@@ -63,4 +66,16 @@ function play(soundData: NotePlayerData) {
   return false;
 }
 
-export { play };
+function playChord(soundData: NotePlayerData[]): boolean {
+  player.queueChord(
+    audioContext,
+    audioContext.destination,
+    _tone_0253_Acoustic_Guitar_sf2_file,
+    0,
+    pitches(soundData),
+    1.5
+  );
+  return false;
+}
+
+export { play, playChord };
