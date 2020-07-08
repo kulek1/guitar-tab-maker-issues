@@ -39,6 +39,6 @@ export const Column = styled.div`
   ${({ active }) =>
     active &&
     css`
-      background: #eaeff7;
+      background: #e2ecfe;
     `}
 `;

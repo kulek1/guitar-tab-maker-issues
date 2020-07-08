@@ -50,7 +50,8 @@ export const generatePDF = (svg: string): void => {
 
 export const generateVextabSyntax = (editorState: EditorState): string => {
   const response = Object.keys(editorState).map((tabKey) => {
-    return editorState[tabKey].notes.reduce((accumulator, currentTabColumnArray) => {
+    const { notes } = editorState[tabKey];
+    return notes.reduce((accumulator, currentTabColumnArray) => {
       // join tab column array into one string
       const column = currentTabColumnArray.reduce(
         (columnAccumulator: string, currentNote: number, currentNoteIndex: number) => {
@@ -76,7 +77,9 @@ export const generateVextabSyntax = (editorState: EditorState): string => {
 
   return `
   tabstave
-  ${response}
+  ${response.join(`
+  tabstave
+  `)}
   `;
 };
 
@@ -84,6 +87,7 @@ export const saveToPdf = (htmlContainer: HTMLElement, editorState: EditorState):
   const vextabSyntax = generateVextabSyntax(editorState);
   generatePreview(htmlContainer, vextabSyntax);
   const svg = htmlContainer.querySelector('svg')?.outerHTML;
+
   if (svg) {
     generatePDF(svg);
   }

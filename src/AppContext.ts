@@ -26,6 +26,7 @@ type AppCtx = {
   isMultipleNotes: boolean;
   isPlaying: boolean;
   setCurrentTabColumn: (column: string) => void;
+  setCurrentTabIndex: (index: string) => void;
   setIsMultipleNotes: (flag: boolean) => void;
   setEditorState: (state: EditorState) => void;
   addNote: (note: TabNote) => void;
@@ -78,6 +79,7 @@ const AppContext = React.createContext<AppCtx>({
   currentTabIndex: '0',
   isPlaying: false,
   setCurrentTabColumn: emptyFnc,
+  setCurrentTabIndex: emptyFnc,
   setEditorState: emptyFnc,
   setIsMultipleNotes: emptyFnc,
   clearEditorState: emptyFnc,

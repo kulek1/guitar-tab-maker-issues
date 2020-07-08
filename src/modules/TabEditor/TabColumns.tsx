@@ -103,7 +103,7 @@ const TabColumns: React.FC<Props> = () => {
           </S.Column>
           <S.Column />
           {editorState[key].notes.map((notes, columnIdx: number) => (
-            <S.Column active={columnIdx.toString() === currentTabColumn}>
+            <S.Column active={columnIdx.toString() === currentTabColumn && key === currentTabIndex}>
               {notes.map((note, guitarString) => (
                 <div>
                   <span

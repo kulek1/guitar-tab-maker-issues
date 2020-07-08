@@ -101,3 +101,24 @@ export const removeTablature = (editorState: EditorState, tablatureIndex: string
   };
   return newEditorState;
 };
+
+export const addTablature = (editorState: EditorState): EditorState => {
+  const newEditorState = JSON.parse(JSON.stringify(editorState));
+  const tabsCounter = Object.keys(newEditorState).length;
+
+  newEditorState[tabsCounter] = {
+    notes: [[null, null, null, null, null, null]],
+  };
+  return newEditorState;
+};
+
+export const insertSpace = (
+  editorState: EditorState,
+  tablatureIndex: string,
+  tablatureColumn: string
+): EditorState => {
+  const newEditorState = JSON.parse(JSON.stringify(editorState));
+  const { notes } = newEditorState[tablatureIndex];
+  notes.splice(tablatureColumn, 0, [null, null, null, null, null, null]);
+  return newEditorState;
+};

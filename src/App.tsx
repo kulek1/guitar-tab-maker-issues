@@ -90,6 +90,11 @@ const App: React.FC<{}> = () => {
     }
   }
 
+  function handleSetCurrentTabIndex(index: string) {
+    setCurrentTabIndex(index);
+    setCurrentTabColumn('0');
+  }
+
   useEffect(() => {
     if (isInit.current) {
       isInit.current = false;
@@ -108,6 +113,7 @@ const App: React.FC<{}> = () => {
           currentTabColumn,
           currentTabIndex,
           setCurrentTabColumn,
+          setCurrentTabIndex: handleSetCurrentTabIndex,
           setIsMultipleNotes,
           setEditorState,
           addNote,
