@@ -112,13 +112,36 @@ export const addTablature = (editorState: EditorState): EditorState => {
   return newEditorState;
 };
 
+export const insertNotesInOneColumn = (
+  editorState: EditorState,
+  tablatureIndex: string,
+  tablatureColumn: string,
+  noteToAdd: string | null
+): EditorState => {
+  const newEditorState = JSON.parse(JSON.stringify(editorState));
+  const { notes } = newEditorState[tablatureIndex];
+  notes.splice(tablatureColumn, 0, [
+    noteToAdd,
+    noteToAdd,
+    noteToAdd,
+    noteToAdd,
+    noteToAdd,
+    noteToAdd,
+  ]);
+  return newEditorState;
+};
+
 export const insertSpace = (
   editorState: EditorState,
   tablatureIndex: string,
   tablatureColumn: string
 ): EditorState => {
-  const newEditorState = JSON.parse(JSON.stringify(editorState));
-  const { notes } = newEditorState[tablatureIndex];
-  notes.splice(tablatureColumn, 0, [null, null, null, null, null, null]);
-  return newEditorState;
+  return insertNotesInOneColumn(editorState, tablatureIndex, tablatureColumn, null);
+};
+export const insertX = (
+  editorState: EditorState,
+  tablatureIndex: string,
+  tablatureColumn: string
+): EditorState => {
+  return insertNotesInOneColumn(editorState, tablatureIndex, tablatureColumn, 'x');
 };

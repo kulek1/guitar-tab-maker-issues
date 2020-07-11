@@ -6,12 +6,12 @@ import { ReactComponent as DownloadIcon } from 'assets/icons/download.svg';
 import html2canvas from 'html2canvas';
 import { saveToPdf } from 'utils/preview';
 import AppContext from 'AppContext';
-import { addTablature, insertSpace } from 'modules/TabEditor/service';
+import { addTablature, insertSpace, insertX } from 'modules/TabEditor/service';
 import * as S from './styles';
 import IconButton from './IconButton';
 
 (window as any).html2canvas = html2canvas;
-const HiddenMenu = () => {
+const HiddenMenu: React.FC<{}> = () => {
   const {
     editorState,
     setEditorState,
@@ -19,7 +19,7 @@ const HiddenMenu = () => {
     currentTabColumn,
     currentTabIndex,
   } = useContext(AppContext);
-  const onDownloadClick = () => {
+  const onDownloadClick = (): void => {
     const containerEl = document.getElementById('tab-preview');
     if (containerEl) {
       saveToPdf(containerEl, editorState);
@@ -37,6 +37,10 @@ const HiddenMenu = () => {
     setEditorState(insertSpace(editorState, currentTabIndex, currentTabColumn));
   }
 
+  function handleXNote(): void {
+    setEditorState(insertX(editorState, currentTabIndex, currentTabColumn));
+  }
+
   return (
     <S.Wrapper>
       <S.SectionWrapper>
@@ -51,7 +55,7 @@ const HiddenMenu = () => {
       </S.SectionWrapper>
       <hr />
       <S.SmallSectionWrapper>
-        <IconButton icon="x" secondary />
+        <IconButton icon="x" secondary onClick={handleXNote} />
         <IconButton icon="h" secondary />
         <IconButton icon="p" secondary />
         <IconButton icon="b" secondary />
