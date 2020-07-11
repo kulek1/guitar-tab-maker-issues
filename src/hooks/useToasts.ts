@@ -3,6 +3,7 @@ import { useToasts } from 'react-toast-notifications';
 type Response = {
   displayWarning: (message: string) => void;
   displayError: (message: string) => void;
+  displayInfo: (message: string) => void;
 };
 
 export const useToast = (): Response => {
@@ -21,8 +22,16 @@ export const useToast = (): Response => {
       autoDismiss: true,
     });
   };
+
+  const displayInfo = (message: string): void => {
+    addToast(message, {
+      appearance: 'info',
+      autoDismiss: true,
+    });
+  };
   return {
     displayWarning,
     displayError,
+    displayInfo,
   };
 };

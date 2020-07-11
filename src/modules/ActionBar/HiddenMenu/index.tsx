@@ -18,7 +18,7 @@ import IconButton from './IconButton';
 
 (window as any).html2canvas = html2canvas;
 const HiddenMenu: React.FC<{}> = () => {
-  const { displayWarning, displayError } = useToast();
+  const { displayWarning, displayError, displayInfo } = useToast();
   const {
     editorState,
     setEditorState,
@@ -70,7 +70,7 @@ const HiddenMenu: React.FC<{}> = () => {
         <IconButton
           icon={<PageIcon />}
           label="show preview"
-          onClick={(): void => alert('this function is not yet implemented')}
+          onClick={(): void => displayInfo('this function is not yet implemented')}
         />
         <IconButton icon={<DownloadIcon />} label="export as" onClick={onDownloadClick} />
       </S.SectionWrapper>
