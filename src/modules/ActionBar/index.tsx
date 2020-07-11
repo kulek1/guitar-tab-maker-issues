@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useEffect, useRef } from 'react';
 import { ReactComponent as AddIcon } from 'assets/icons/add-outline.svg';
 import { ReactComponent as BinIcon } from 'assets/icons/bin.svg';
 import { ReactComponent as RefreshIcon } from 'assets/icons/refresh.svg';
@@ -25,15 +25,23 @@ const ActionBar: React.FC<{}> = () => {
     setEditorState,
     goBack,
   } = useContext(AppContext);
+  const currentTabColumnRef = useRef(currentTabColumn);
+  const currentTabIndexRef = useRef(currentTabIndex);
+  const editorStateRef = useRef(editorState);
+  currentTabColumnRef.current = currentTabColumn;
+  currentTabIndexRef.current = currentTabIndex;
+  editorStateRef.current = editorState;
 
   function nextColumn(): void {
-    const currentColumn = parseInt(currentTabColumn, 10);
-    if (!isSelectionAtEnd(editorState, currentTabIndex, currentTabColumn)) {
+    const tabColumn = currentTabColumnRef.current;
+    const currentColumn = parseInt(tabColumn, 10);
+    if (!isSelectionAtEnd(editorStateRef.current, currentTabIndexRef.current, tabColumn)) {
       setCurrentTabColumn((currentColumn + 1).toString());
     }
   }
   function previousColumn(): void {
-    const currentColumn = parseInt(currentTabColumn, 10);
+    const tabColumn = currentTabColumnRef.current;
+    const currentColumn = parseInt(tabColumn, 10);
     if (currentColumn > 0) {
       setCurrentTabColumn((currentColumn - 1).toString());
     }
@@ -47,6 +55,21 @@ const ActionBar: React.FC<{}> = () => {
     setEditorState(removeTablature(editorState, currentTabIndex));
     setCurrentTabColumn('0');
   }
+
+  useEffect(() => {
+    function handler({ key }): void {
+      if (key === 'ArrowRight') {
+        nextColumn();
+      } else if (key === 'ArrowLeft') {
+        previousColumn();
+      }
+    }
+    document.addEventListener('keydown', handler);
+    return (): void => {
+      document.removeEventListener('keydown', handler);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <S.Sticky>
