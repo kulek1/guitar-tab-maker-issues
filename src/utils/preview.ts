@@ -52,6 +52,8 @@ export const generateVextabSyntax = (editorState: EditorState): string => {
   const response = Object.keys(editorState).map((tabKey) => {
     const { notes } = editorState[tabKey];
     return notes.reduce((accumulator, currentTabColumnArray) => {
+      const hasMoreThanOneNotes =
+        currentTabColumnArray.filter((el) => typeof el === 'number').length >= 2;
       // join tab column array into one string
       const column = currentTabColumnArray.reduce(
         (columnAccumulator: string, currentNote: number, currentNoteIndex: number) => {
@@ -64,9 +66,17 @@ export const generateVextabSyntax = (editorState: EditorState): string => {
             );
             return newNote;
           }
+          if (typeof currentNote === 'string' && !columnAccumulator.includes(currentNote)) {
+            const newNote = insert(
+              columnAccumulator,
+              columnAccumulator.length - 1,
+              `${currentNote}`
+            );
+            return newNote;
+          }
           return columnAccumulator;
         },
-        '()'
+        hasMoreThanOneNotes ? '()' : ''
       );
       if (column !== '()') {
         return `${accumulator}${column} `;

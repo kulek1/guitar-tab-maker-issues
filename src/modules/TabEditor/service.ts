@@ -145,3 +145,35 @@ export const insertX = (
 ): EditorState => {
   return insertNotesInOneColumn(editorState, tablatureIndex, tablatureColumn, 'x');
 };
+
+export const insertNotesBasedOnPreviousColumn = (
+  editorState: EditorState,
+  tablatureIndex: string,
+  tablatureColumn: string,
+  noteToAdd: string
+): EditorState => {
+  const newEditorState = JSON.parse(JSON.stringify(editorState));
+  const { notes } = newEditorState[tablatureIndex];
+  const previousColumn = notes[parseInt(tablatureColumn, 10) - 1];
+  const hasAtLeastOneNote = !!previousColumn.find((el) => typeof el === 'number');
+
+  if (previousColumn && hasAtLeastOneNote) {
+    notes[tablatureColumn] = previousColumn.map((note) => {
+      if (typeof note === 'number') {
+        return noteToAdd;
+      }
+      return null;
+    });
+
+    // add next column if it is not added
+    const nextIndex = parseInt(tablatureColumn, 10) + 1;
+    if (!notes[nextIndex]) {
+      notes[nextIndex] = [null, null, null, null, null, null];
+    }
+  } else {
+    throw new Error('Previous column does not have any notes');
+  }
+  // console.warn(previousColumn);
+  // console.warn(notes[tablatureColumn]);
+  return newEditorState;
+};

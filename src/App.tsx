@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { ToastProvider } from 'react-toast-notifications';
 import './styles/main.scss';
 import AppContext, {
   openNotesInitialValue,
@@ -106,28 +107,30 @@ const App: React.FC<{}> = () => {
 
   return (
     <div className="container">
-      <AppContext.Provider
-        value={{
-          editorState,
-          isMultipleNotes,
-          currentTabColumn,
-          currentTabIndex,
-          setCurrentTabColumn,
-          setCurrentTabIndex: handleSetCurrentTabIndex,
-          setIsMultipleNotes,
-          setEditorState,
-          addNote,
-          openNotes,
-          setOpenNotes: setOpenNote,
-          clearEditorState,
-          onPlayClick: handlePlayNotes,
-          isPlaying,
-          goBack,
-        }}
-      >
-        <MainLayout />
-        <TabPreview />
-      </AppContext.Provider>
+      <ToastProvider>
+        <AppContext.Provider
+          value={{
+            editorState,
+            isMultipleNotes,
+            currentTabColumn,
+            currentTabIndex,
+            setCurrentTabColumn,
+            setCurrentTabIndex: handleSetCurrentTabIndex,
+            setIsMultipleNotes,
+            setEditorState,
+            addNote,
+            openNotes,
+            setOpenNotes: setOpenNote,
+            clearEditorState,
+            onPlayClick: handlePlayNotes,
+            isPlaying,
+            goBack,
+          }}
+        >
+          <MainLayout />
+          <TabPreview />
+        </AppContext.Provider>
+      </ToastProvider>
     </div>
   );
 };
