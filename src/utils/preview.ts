@@ -1,10 +1,9 @@
 import SVGtoPDF from 'svg-to-pdfkit';
 import { EditorState } from 'AppContext';
-import { TabNote } from 'types/notes';
 
 const { vextab } = window as any;
 const { Renderer } = vextab.Vex.Flow;
-const { VexTab, Artist, Vex } = vextab;
+const { VexTab, Artist } = vextab;
 
 function insert(str: string, index: number, value: string): string {
   return str.substr(0, index) + value + str.substr(index);
@@ -58,7 +57,7 @@ export const generateVextabSyntax = (editorState: EditorState): string => {
       const column = currentTabColumnArray.reduce(
         (columnAccumulator: string, currentNote: number, currentNoteIndex: number) => {
           if (typeof currentNote === 'number') {
-            const shouldAddSeparator = columnAccumulator !== '()';
+            const shouldAddSeparator = columnAccumulator !== '' && columnAccumulator !== '()';
             const newNote = insert(
               columnAccumulator,
               columnAccumulator.length - 1,
@@ -67,11 +66,8 @@ export const generateVextabSyntax = (editorState: EditorState): string => {
             return newNote;
           }
           if (typeof currentNote === 'string' && !columnAccumulator.includes(currentNote)) {
-            const newNote = insert(
-              columnAccumulator,
-              columnAccumulator.length - 1,
-              `${currentNote}`
-            );
+            const toInsert = currentNote === '/' || currentNote === '\\' ? 's' : currentNote;
+            const newNote = insert(columnAccumulator, columnAccumulator.length - 1, `${toInsert}`);
             return newNote;
           }
           return columnAccumulator;
@@ -85,8 +81,7 @@ export const generateVextabSyntax = (editorState: EditorState): string => {
     }, 'notes ');
   });
 
-  return `
-  tabstave
+  return `tabstave
   ${response.join(`
   tabstave
   `)}

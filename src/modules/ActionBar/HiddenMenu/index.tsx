@@ -1,5 +1,4 @@
 import React, { useContext } from 'react';
-import { useToasts } from 'react-toast-notifications';
 import { ReactComponent as AddIcon } from 'assets/icons/add-outline.svg';
 import { ReactComponent as TabIcon } from 'assets/icons/tab-outline.svg';
 import { ReactComponent as PageIcon } from 'assets/icons/page.svg';
@@ -13,12 +12,13 @@ import {
   insertX,
   insertNotesBasedOnPreviousColumn,
 } from 'modules/TabEditor/service';
+import { useToast } from 'hooks/useToasts';
 import * as S from './styles';
 import IconButton from './IconButton';
 
 (window as any).html2canvas = html2canvas;
 const HiddenMenu: React.FC<{}> = () => {
-  const { addToast } = useToasts();
+  const { displayWarning, displayError } = useToast();
   const {
     editorState,
     setEditorState,
@@ -29,7 +29,11 @@ const HiddenMenu: React.FC<{}> = () => {
   const onDownloadClick = (): void => {
     const containerEl = document.getElementById('tab-preview');
     if (containerEl) {
-      saveToPdf(containerEl, editorState);
+      try {
+        saveToPdf(containerEl, editorState);
+      } catch (err) {
+        displayError('Your tablature is not valid. Please, correct it and try again');
+      }
     }
   };
 
@@ -54,10 +58,7 @@ const HiddenMenu: React.FC<{}> = () => {
         insertNotesBasedOnPreviousColumn(editorState, currentTabIndex, currentTabColumn, note)
       );
     } catch (err) {
-      addToast('Previous column does not have any notes', {
-        appearance: 'warning',
-        autoDismiss: true,
-      });
+      displayWarning('Previous column does not have any notes');
     }
   }
 
