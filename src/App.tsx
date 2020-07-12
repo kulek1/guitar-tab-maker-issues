@@ -102,7 +102,11 @@ const App: React.FC<{}> = () => {
     } else {
       setIsPlaing(true);
 
-      await playNotes(editorState, currentTabIndex, openNotes, playerStop.current);
+      try {
+        await playNotes(editorState, currentTabIndex, openNotes, playerStop.current);
+      } catch (err) {
+        displayError(err.message);
+      }
       setIsPlaing(false);
     }
   }
