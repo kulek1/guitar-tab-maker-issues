@@ -36,6 +36,7 @@ const App: React.FC<{}> = () => {
     });
     const currentTablature: EditorStateEntry = editorState[currentTabIndex];
     if (currentTablature) {
+      // Get previous note so we can restore e.g. note change from 4->6
       const previousNote = currentTablature.notes[currentTabColumn][note.guitarString - 1];
       saveToHistory(previousNote, note, currentTabIndex, currentTabColumn);
     }

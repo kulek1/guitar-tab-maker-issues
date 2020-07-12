@@ -1,6 +1,7 @@
 import { TabNote } from 'types/notes';
 import { NOTES_PROGRESSION } from 'constants/notes';
 import { OpenNotes, EditorState } from 'AppContext';
+import { saveToHistory } from 'utils/localStorage';
 
 const EMPTY_NOTES_COUNTER = 20;
 
@@ -170,6 +171,24 @@ export const insertNotesBasedOnPreviousColumn = (
     if (!notes[nextIndex]) {
       notes[nextIndex] = [null, null, null, null, null, null];
     }
+
+    // ADD TO HISTORY
+    notes[tablatureColumn].forEach((element, idx) => {
+      if (!element) {
+        return;
+      }
+      const previousNote = editorState[tablatureIndex].notes[tablatureColumn][idx + 1];
+      saveToHistory(
+        previousNote,
+        {
+          // @ts-ignore
+          noteNumber: noteToAdd,
+          guitarString: idx + 1,
+        },
+        tablatureIndex,
+        tablatureColumn
+      );
+    });
   } else {
     throw new Error('Previous column does not have any notes');
   }
