@@ -91,9 +91,10 @@ export const generateVextabSyntax = (editorState: EditorState): string => {
 export const saveToPdf = (htmlContainer: HTMLElement, editorState: EditorState): void => {
   const vextabSyntax = generateVextabSyntax(editorState);
   generatePreview(htmlContainer, vextabSyntax);
-  const svg = htmlContainer.querySelector('svg')?.outerHTML;
+  const svgElement = htmlContainer.querySelector('svg');
 
-  if (svg) {
-    generatePDF(svg);
+  if (svgElement) {
+    svgElement.querySelector('text:last-child')?.remove();
+    generatePDF(svgElement.outerHTML);
   }
 };
