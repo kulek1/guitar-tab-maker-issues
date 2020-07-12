@@ -64,9 +64,13 @@ const TabColumns: React.FC<Props> = () => {
   } = useContext(AppContext);
 
   function onTablatureClick(event: MouseEvent<HTMLDivElement>, key): void {
-    const { target } = event;
+    // @ts-ignore
+    let { target }: { target: HTMLElement } = event;
 
     if (target) {
+      if (target.tagName === 'DIV') {
+        target = target.firstChild as HTMLElement;
+      }
       const column = (target as HTMLDivElement).getAttribute('data-column');
       const tab = (target as HTMLDivElement).getAttribute('data-tab');
 
@@ -111,7 +115,7 @@ const TabColumns: React.FC<Props> = () => {
                   active={columnIdx.toString() === currentTabColumn && key === currentTabIndex}
                 >
                   {notes.map((note, guitarString) => (
-                    <>
+                    <div>
                       <span
                         className={note > 9 ? 'big' : ''}
                         data-column={columnIdx}
@@ -120,7 +124,7 @@ const TabColumns: React.FC<Props> = () => {
                       >
                         {note === null ? '-' : note}
                       </span>
-                    </>
+                    </div>
                   ))}
                 </S.Column>
               ))}
