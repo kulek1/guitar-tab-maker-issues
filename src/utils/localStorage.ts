@@ -21,7 +21,7 @@ export const saveEditorState = (editorState: EditorState): void => {
 
 export const getEditorState = (): EditorState => {
   const state = localStorage.getItem('editorState');
-  return JSON.parse(state || '') as EditorState;
+  return JSON.parse(state || 'null') as EditorState;
 };
 
 export const saveToHistory = (
