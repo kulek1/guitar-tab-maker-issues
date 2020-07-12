@@ -48,6 +48,7 @@ const HiddenMenu: React.FC<{}> = () => {
 
   function handleInsertSpace(): void {
     setEditorState(insertSpace(editorState, currentTabIndex, currentTabColumn));
+    setCurrentTabColumn((parseInt(currentTabColumn, 10) + 1).toString());
   }
 
   function handleXNote(): void {
