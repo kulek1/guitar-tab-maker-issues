@@ -5,10 +5,10 @@
   &__container {
     position: relative;
     background: $color-bg;
-    flex: 0.4;
     cursor: text;
     overflow: auto;
     color: #000;
+    flex: 1 0 auto;
 
     button {
       margin-right: 1rem;

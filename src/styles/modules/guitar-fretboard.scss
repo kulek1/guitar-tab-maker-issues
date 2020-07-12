@@ -2,7 +2,7 @@
 
 $neck-color: #aabee3;
 $neck-height: 225px;
-$neck-width: 960px;
+$neck-width: 100%;
 $neck-height-with-offset: $neck-height + 20px;
 
 * {
@@ -20,7 +20,6 @@ h1 {
   font-family: 'Source Code Pro', sans-serif;
   position: relative;
   margin-top: 40px;
-  // margin-left: auto;
   margin-left: 3em;
   margin-right: auto;
   width: $neck-width;
@@ -35,10 +34,11 @@ h1 {
   &-scrollable-wrapper {
     overflow-x: auto;
     overflow-y: hidden;
+    margin-bottom: 70px;
   }
 
   &-wrapper {
-    width: $neck-width + 150;
+    width: $neck-width;
     margin: 0 auto;
     height: $neck-height + 25;
   }

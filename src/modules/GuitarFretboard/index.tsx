@@ -104,7 +104,7 @@ type Props = {
   frets?: number;
 };
 
-const GuitarFretboard: React.FC<Props> = ({ showAllNotes, frets = 19 }) => {
+const GuitarFretboard: React.FC<Props> = ({ showAllNotes, frets = 25 }) => {
   const { addNote, openNotes } = useContext(AppContext);
 
   function handleNoteClick(noteNumber: number, guitarString: number): void {
@@ -118,7 +118,7 @@ const GuitarFretboard: React.FC<Props> = ({ showAllNotes, frets = 19 }) => {
           <div className="fret first">
             <span>0</span>
           </div>
-          {[...Array(frets + 1)].map((_, idx) => (
+          {[...Array(frets)].map((_, idx) => (
             <div className="fret" key={idx}>
               <span>{idx + 1}</span>
             </div>

@@ -26,7 +26,7 @@ const generateOctavesWithNumbers = (note: Note, octaveNumber: number, frets: num
   return generatedNotes;
 };
 
-const FretNotes: React.FC<Props> = ({ onNoteClick, frets = 12 }) => {
+const FretNotes: React.FC<Props> = ({ onNoteClick, frets }) => {
   const { openNotes } = useContext(AppContext);
 
   const onNoteClickCallback = (note: string, noteNumber: number, guitarString: string): void => {
@@ -44,7 +44,7 @@ const FretNotes: React.FC<Props> = ({ onNoteClick, frets = 12 }) => {
         return (
           <div className="mask" key={mainGuitarString}>
             <ul>
-              {generateOctavesWithNumbers(openNote.note, openNote.octave, frets).map(
+              {generateOctavesWithNumbers(openNote.note, openNote.octave, frets + 1).map(
                 (note, idx) => (
                   <button
                     type="button"
