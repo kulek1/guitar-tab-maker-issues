@@ -46,7 +46,7 @@ h1 {
   .open-notes {
     position: absolute;
     font-family: 'Source Code Pro', sans-serif;
-    top: -1px;
+    top: 2px;
     left: -2.3rem;
 
     select {
@@ -57,7 +57,7 @@ h1 {
     }
 
     > * {
-      margin-bottom: 2.325rem;
+      margin-bottom: 2.55rem;
       display: block;
 
       &.active {
