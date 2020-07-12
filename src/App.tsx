@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { ToastProvider } from 'react-toast-notifications';
 import './styles/main.scss';
 import AppContext, {
   openNotesInitialValue,
@@ -12,8 +11,15 @@ import { convertToOpenNote } from 'utils/notes';
 import { insertNoteToState, isSelectionAtEnd } from 'modules/TabEditor/service';
 import MainLayout from 'layout/MainLayout';
 import { playNotes } from 'modules/TabEditor/player';
-import { saveToHistory, getHistory, removeLastElementFromHistory } from 'utils/localStorage';
+import {
+  saveToHistory,
+  getHistory,
+  removeLastElementFromHistory,
+  getEditorState,
+  saveEditorState,
+} from 'utils/localStorage';
 import TabPreview from 'components/TabPreview';
+import { useToast } from 'hooks/useToasts';
 
 const App: React.FC<{}> = () => {
   const isInit = useRef(true);
@@ -22,30 +28,40 @@ const App: React.FC<{}> = () => {
   const [openNotes, setOpenNotes] = useState(openNotesInitialValue);
   const [editorState, setEditorState] = useState<EditorState>(initialEditorState);
   const [isMultipleNotes, setIsMultipleNotes] = useState(false);
+  const { displayError } = useToast();
 
   // player
   const playerStop = useRef<{ cancel: () => void }>({ cancel: () => {} });
   const [isPlaying, setIsPlaing] = useState(false);
 
-  function addNote(note: TabNote): void {
-    const newState = insertNoteToState({
-      editorState,
-      tablatureIndex: currentTabIndex,
-      tablatureColumn: currentTabColumn,
-      note,
-    });
-    const currentTablature: EditorStateEntry = editorState[currentTabIndex];
-    if (currentTablature) {
-      // Get previous note so we can restore e.g. note change from 4->6
-      const previousNote = currentTablature.notes[currentTabColumn][note.guitarString - 1];
-      saveToHistory(previousNote, note, currentTabIndex, currentTabColumn);
-    }
-    setEditorState(newState);
+  function handleEditorState(newEditorState: EditorState): void {
+    setEditorState(newEditorState);
+    saveEditorState(newEditorState);
+  }
 
-    if (isSelectionAtEnd(editorState, currentTabIndex, currentTabColumn)) {
-      const currentTabColumnNumber = parseInt(currentTabColumn, 10);
-      const nextColumn = (currentTabColumnNumber + 1).toString();
-      setCurrentTabColumn(nextColumn);
+  function addNote(note: TabNote): void {
+    try {
+      const newState = insertNoteToState({
+        editorState,
+        tablatureIndex: currentTabIndex,
+        tablatureColumn: currentTabColumn,
+        note,
+      });
+      const currentTablature: EditorStateEntry = editorState[currentTabIndex];
+      if (currentTablature) {
+        // Get previous note so we can restore e.g. note change from 4->6
+        const previousNote = currentTablature.notes[currentTabColumn][note.guitarString - 1];
+        saveToHistory(previousNote, note, currentTabIndex, currentTabColumn, editorState);
+      }
+      handleEditorState(newState);
+
+      if (isSelectionAtEnd(editorState, currentTabIndex, currentTabColumn)) {
+        const currentTabColumnNumber = parseInt(currentTabColumn, 10);
+        const nextColumn = (currentTabColumnNumber + 1).toString();
+        setCurrentTabColumn(nextColumn);
+      }
+    } catch (err) {
+      displayError(err.message);
     }
   }
 
@@ -76,7 +92,7 @@ const App: React.FC<{}> = () => {
     });
     removeLastElementFromHistory();
 
-    setEditorState(newState);
+    handleEditorState(newState);
     return true;
   }
 
@@ -106,32 +122,37 @@ const App: React.FC<{}> = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [openNotes]);
 
+  useEffect(() => {
+    const cachedEditorState = getEditorState();
+    if (cachedEditorState) {
+      setEditorState(cachedEditorState);
+    }
+  }, []);
+
   return (
     <div className="container">
-      <ToastProvider>
-        <AppContext.Provider
-          value={{
-            editorState,
-            isMultipleNotes,
-            currentTabColumn,
-            currentTabIndex,
-            setCurrentTabColumn,
-            setCurrentTabIndex: handleSetCurrentTabIndex,
-            setIsMultipleNotes,
-            setEditorState,
-            addNote,
-            openNotes,
-            setOpenNotes: setOpenNote,
-            clearEditorState,
-            onPlayClick: handlePlayNotes,
-            isPlaying,
-            goBack,
-          }}
-        >
-          <MainLayout />
-          <TabPreview />
-        </AppContext.Provider>
-      </ToastProvider>
+      <AppContext.Provider
+        value={{
+          editorState,
+          isMultipleNotes,
+          currentTabColumn,
+          currentTabIndex,
+          setCurrentTabColumn,
+          setCurrentTabIndex: handleSetCurrentTabIndex,
+          setIsMultipleNotes,
+          setEditorState: handleEditorState,
+          addNote,
+          openNotes,
+          setOpenNotes: setOpenNote,
+          clearEditorState,
+          onPlayClick: handlePlayNotes,
+          isPlaying,
+          goBack,
+        }}
+      >
+        <MainLayout />
+        <TabPreview />
+      </AppContext.Provider>
     </div>
   );
 };

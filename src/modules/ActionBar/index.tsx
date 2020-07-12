@@ -21,6 +21,7 @@ const ActionBar: React.FC<{}> = () => {
     currentTabColumn,
     currentTabIndex,
     setCurrentTabColumn,
+    setCurrentTabIndex,
     editorState,
     setEditorState,
     goBack,
@@ -51,9 +52,10 @@ const ActionBar: React.FC<{}> = () => {
     setEditorState(clearColumn(editorState, currentTabIndex, currentTabColumn));
   }
 
-  function handleClearTablature(): void {
-    setEditorState(removeTablature(editorState, currentTabIndex));
+  function handleRemovingTablature(): void {
     setCurrentTabColumn('0');
+    setCurrentTabIndex((parseInt(currentTabIndex, 10) - 1).toString());
+    setEditorState(removeTablature(editorState, currentTabIndex));
   }
 
   useEffect(() => {
@@ -77,7 +79,7 @@ const ActionBar: React.FC<{}> = () => {
         <HiddenMenu />
       </S.HiddenMenu>
       <S.Wrapper>
-        <S.Btn type="button" title="remove selected tablature" onClick={handleClearTablature}>
+        <S.Btn type="button" title="remove selected tablature" onClick={handleRemovingTablature}>
           <BinIcon />
         </S.Btn>
         <S.Btn type="button" title="clear selected column" onClick={handleClearColumnClick}>

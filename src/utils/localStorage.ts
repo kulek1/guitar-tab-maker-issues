@@ -1,4 +1,5 @@
 import { TabNote } from 'types/notes';
+import { EditorState } from 'AppContext';
 
 const MAX_SIZE = 30;
 
@@ -14,11 +15,21 @@ type Storage = {
   history: HistoryEntry[];
 };
 
+export const saveEditorState = (editorState: EditorState): void => {
+  localStorage.setItem('editorState', JSON.stringify(editorState));
+};
+
+export const getEditorState = (): EditorState => {
+  const state = localStorage.getItem('editorState');
+  return JSON.parse(state || '') as EditorState;
+};
+
 export const saveToHistory = (
   previousNote: string,
   note: TabNote,
   tablatureIndex: string,
-  tablatureColumn: string
+  tablatureColumn: string,
+  editorState: EditorState
 ): void => {
   const currentState = localStorage.getItem('history');
   const parsedState: Storage['history'] = JSON.parse(currentState || '[]');
@@ -35,6 +46,7 @@ export const saveToHistory = (
   });
 
   localStorage.setItem('history', JSON.stringify(parsedState));
+  saveEditorState(editorState);
 };
 
 export const getHistory = (): Storage['history'] | null => {

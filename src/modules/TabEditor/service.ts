@@ -65,7 +65,11 @@ export const insertNoteToState = ({
 }): EditorState => {
   const newEditorState = JSON.parse(JSON.stringify(editorState));
 
-  const { notes } = newEditorState[tablatureIndex];
+  const { notes } = newEditorState[tablatureIndex] || {};
+
+  if (!notes) {
+    throw new Error('Selected tablature does not exist');
+  }
 
   if (notes[tablatureColumn]) {
     notes[tablatureColumn][note.guitarString - 1] = note.noteNumber;
@@ -97,9 +101,7 @@ export const clearColumn = (
 
 export const removeTablature = (editorState: EditorState, tablatureIndex: string): EditorState => {
   const newEditorState = JSON.parse(JSON.stringify(editorState));
-  newEditorState[tablatureIndex] = {
-    notes: [[null, null, null, null, null, null]],
-  };
+  newEditorState[tablatureIndex] = null;
   return newEditorState;
 };
 
@@ -186,7 +188,8 @@ export const insertNotesBasedOnPreviousColumn = (
           guitarString: idx + 1,
         },
         tablatureIndex,
-        tablatureColumn
+        tablatureColumn,
+        editorState
       );
     });
   } else {

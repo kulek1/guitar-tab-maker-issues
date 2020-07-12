@@ -1,12 +1,15 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { ToastProvider } from 'react-toast-notifications';
 import './index.css';
-import App from './App';
 import * as serviceWorker from './serviceWorker';
+import App from './App';
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <ToastProvider>
+      <App />
+    </ToastProvider>
   </React.StrictMode>,
   document.getElementById('root')
 );
