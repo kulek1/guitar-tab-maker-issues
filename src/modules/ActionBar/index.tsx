@@ -105,10 +105,15 @@ const ActionBar: React.FC<{}> = () => {
         >
           {isPlaying ? <S.Pause /> : <PlayIcon />}
         </S.Btn>
-        <S.Btn type="button" title="move selection to left" rotate onClick={previousColumn}>
+        <S.Btn
+          type="button"
+          title="Move selection to left (Left arrow)"
+          rotate
+          onClick={previousColumn}
+        >
           <ArrowIcon />
         </S.Btn>
-        <S.Btn type="button" title="move selection to right" onClick={nextColumn}>
+        <S.Btn type="button" title="Move selection to right (Right arrow)" onClick={nextColumn}>
           <ArrowIcon />
         </S.Btn>
       </S.Wrapper>
