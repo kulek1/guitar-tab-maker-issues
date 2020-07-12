@@ -22,7 +22,6 @@ import TabPreview from 'components/TabPreview';
 import { useToast } from 'hooks/useToasts';
 
 const App: React.FC<{}> = () => {
-  const isInit = useRef(true);
   const [currentTabColumn, setCurrentTabColumn] = useState('0');
   const [currentTabIndex, setCurrentTabIndex] = useState('0');
   const [openNotes, setOpenNotes] = useState(openNotesInitialValue);
@@ -108,20 +107,6 @@ const App: React.FC<{}> = () => {
     }
   }
 
-  function handleSetCurrentTabIndex(index: string) {
-    setCurrentTabIndex(index);
-    setCurrentTabColumn('0');
-  }
-
-  useEffect(() => {
-    if (isInit.current) {
-      isInit.current = false;
-    } else {
-      // clearEditorState();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [openNotes]);
-
   useEffect(() => {
     const cachedEditorState = getEditorState();
     if (cachedEditorState) {
@@ -138,7 +123,7 @@ const App: React.FC<{}> = () => {
           currentTabColumn,
           currentTabIndex,
           setCurrentTabColumn,
-          setCurrentTabIndex: handleSetCurrentTabIndex,
+          setCurrentTabIndex,
           setIsMultipleNotes,
           setEditorState: handleEditorState,
           addNote,

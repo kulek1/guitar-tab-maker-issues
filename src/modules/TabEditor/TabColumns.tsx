@@ -72,7 +72,6 @@ const TabColumns: React.FC<Props> = () => {
 
       if (column && typeof tab === 'string') {
         setCurrentTabColumn(column);
-        // console.log(target, column, tab, parseInt(tab, 10).toString());
         setCurrentTabIndex(parseInt(tab, 10).toString());
       }
     }

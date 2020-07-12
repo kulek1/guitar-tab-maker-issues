@@ -23,6 +23,7 @@ const HiddenMenu: React.FC<{}> = () => {
     editorState,
     setEditorState,
     setCurrentTabIndex,
+    setCurrentTabColumn,
     currentTabColumn,
     currentTabIndex,
   } = useContext(AppContext);
@@ -40,8 +41,9 @@ const HiddenMenu: React.FC<{}> = () => {
   function handleAddTablature(): void {
     const newEditorState = addTablature(editorState);
     setEditorState(newEditorState);
-    const tabsCounter = Object.keys(editorState).length;
+    const tabsCounter = Object.keys(newEditorState).length - 1;
     setCurrentTabIndex(tabsCounter.toString());
+    setCurrentTabColumn('0');
   }
 
   function handleInsertSpace(): void {
