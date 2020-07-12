@@ -10,10 +10,12 @@ import { ReactComponent as ArrowIcon } from 'assets/icons/arrow-forward-outline.
 
 import AppContext from 'AppContext';
 import { isSelectionAtEnd, clearColumn, removeTablature } from 'modules/TabEditor/service';
+import { useToast } from 'hooks/useToasts';
 import * as S from './styles';
 import HiddenMenu from './HiddenMenu';
 
 const ActionBar: React.FC<{}> = () => {
+  const { displayError } = useToast();
   const [isMenu, setIsMenu] = useState(false);
   const {
     isPlaying,
@@ -49,7 +51,11 @@ const ActionBar: React.FC<{}> = () => {
   }
 
   function handleClearColumnClick(): void {
-    setEditorState(clearColumn(editorState, currentTabIndex, currentTabColumn));
+    try {
+      setEditorState(clearColumn(editorState, currentTabIndex, currentTabColumn));
+    } catch (err) {
+      displayError('Selected tablature does not exist. Try to select some tablature');
+    }
   }
 
   function handleRemovingTablature(): void {
