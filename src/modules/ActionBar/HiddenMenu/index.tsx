@@ -33,16 +33,16 @@ const HiddenMenu: React.FC<{}> = () => {
       try {
         saveToPdf(containerEl, editorState);
       } catch (err) {
+        console.error(err);
         displayError('Your tablature is not valid. Please, correct it and try again');
       }
     }
   };
 
   function handleAddTablature(): void {
-    const newEditorState = addTablature(editorState);
+    const { state: newEditorState, newKey } = addTablature(editorState);
     setEditorState(newEditorState);
-    const tabsCounter = Object.keys(newEditorState).length - 1;
-    setCurrentTabIndex(tabsCounter.toString());
+    setCurrentTabIndex(newKey.toString());
     setCurrentTabColumn('0');
   }
 

@@ -100,19 +100,28 @@ export const clearColumn = (
 };
 
 export const removeTablature = (editorState: EditorState, tablatureIndex: string): EditorState => {
-  const newEditorState = JSON.parse(JSON.stringify(editorState));
-  newEditorState[tablatureIndex] = null;
+  const { [parseInt(tablatureIndex, 10)]: excludedTab, ...stateWithoutTablature } = editorState;
+  const newEditorState = JSON.parse(JSON.stringify(stateWithoutTablature));
   return newEditorState;
 };
 
-export const addTablature = (editorState: EditorState): EditorState => {
+export const addTablature = (editorState: EditorState): { state: EditorState; newKey: number } => {
   const newEditorState = JSON.parse(JSON.stringify(editorState));
-  const tabsCounter = Object.keys(newEditorState).length;
+  const tabKeys = Object.keys(newEditorState);
 
-  newEditorState[tabsCounter] = {
+  let largestKey = 0;
+
+  for (let i = 0; i <= largestKey; i += 1) {
+    const key = parseInt(tabKeys[i], 10);
+    if (key > largestKey) {
+      largestKey = key;
+    }
+  }
+
+  newEditorState[largestKey + 1] = {
     notes: [[null, null, null, null, null, null]],
   };
-  return newEditorState;
+  return { state: newEditorState, newKey: largestKey + 1 };
 };
 
 export const insertNotesInOneColumn = (

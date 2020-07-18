@@ -49,7 +49,11 @@ export const generatePDF = (svg: string): void => {
 
 export const generateVextabSyntax = (editorState: EditorState): string => {
   const response = Object.keys(editorState).map((tabKey) => {
-    const { notes } = editorState[tabKey];
+    const tablature = editorState[tabKey];
+    if (!tablature) {
+      return null;
+    }
+    const { notes } = tablature;
     return notes.reduce((accumulator, currentTabColumnArray) => {
       const hasMoreThanOneNotes =
         currentTabColumnArray.filter((el) => typeof el === 'number').length >= 2;
