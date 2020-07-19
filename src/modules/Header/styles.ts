@@ -1,4 +1,5 @@
 import styled from 'styled-components/macro';
+import { ReactComponent as SettingsIcon } from 'assets/icons/settings.svg';
 
 export const LogoWrapper = styled.div`
   font-family: 'Roboto', sans-serif;
@@ -15,4 +16,8 @@ export const Header = styled.header`
       display: none;
     }
   }
+`;
+
+export const SettingsIconBtn = styled(SettingsIcon)`
+  cursor: pointer;
 `;

@@ -59,3 +59,38 @@ button {
 #tab-preview {
   display: none;
 }
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  color: $color-text-primary;
+}
+
+h1 {
+  margin-bottom: 1.5em;
+}
+
+h2 {
+  margin-bottom: 1em;
+}
+
+h3 {
+  margin-bottom: 0.75em;
+}
+h4 {
+  margin-bottom: 0.5em;
+}
+h4 {
+  margin-bottom: 0.25em;
+}
+h5 {
+  margin-bottom: 0.25em;
+}
+
+label {
+  display: block;
+  margin-bottom: 1em;
+}

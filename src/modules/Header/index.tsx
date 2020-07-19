@@ -1,12 +1,14 @@
-import React from 'react';
-import { ReactComponent as SettingsIcon } from 'assets/icons/settings.svg';
+import React, { useState } from 'react';
+import Settings from 'modules/Settings';
 import * as S from './styles';
 
 const Header: React.FC<{}> = () => {
+  const [isOpen, setIsOpen] = useState(false);
   return (
     <S.Header>
       <S.LogoWrapper>TabMaker</S.LogoWrapper>
-      <SettingsIcon />
+      <S.SettingsIconBtn onClick={() => setIsOpen(!isOpen)} />
+      <Settings isOpen={isOpen} onCloseModal={() => setIsOpen(false)} />
     </S.Header>
   );
 };

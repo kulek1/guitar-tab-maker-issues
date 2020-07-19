@@ -6,7 +6,14 @@ const AudioContextFunc = window.AudioContext || (window as any).webkitAudioConte
 const audioContext = new AudioContextFunc();
 const player = new WebAudioFontPlayer();
 
+export enum Instrument {
+  AcousticGuitar1 = 'AcousticGuitar1',
+  ElectricGuitar1 = 'ElectricGuitar1',
+}
+
 player.adjustPreset(audioContext, _tone_0253_Acoustic_Guitar_sf2_file);
+// eslint-disable-next-line @typescript-eslint/camelcase
+let currentInstrument = _tone_0253_Acoustic_Guitar_sf2_file;
 
 export const NOTES_TO_NUMBER = {
   C: 0,
@@ -58,7 +65,7 @@ function play(soundData: NotePlayerData): boolean {
   player.queueWaveTable(
     audioContext,
     audioContext.destination,
-    _tone_0253_Acoustic_Guitar_sf2_file,
+    currentInstrument,
     0,
     getPitch(soundData),
     1.5
@@ -70,7 +77,7 @@ function playChord(soundData: NotePlayerData[]): boolean {
   player.queueChord(
     audioContext,
     audioContext.destination,
-    _tone_0253_Acoustic_Guitar_sf2_file,
+    currentInstrument,
     0,
     pitches(soundData),
     1.5
@@ -78,4 +85,17 @@ function playChord(soundData: NotePlayerData[]): boolean {
   return false;
 }
 
-export { play, playChord };
+async function changeInstrument(instrument: Instrument): Promise<void> {
+  /* eslint-disable @typescript-eslint/camelcase */
+  if (instrument === Instrument.ElectricGuitar1) {
+    const { _tone_0272_Stratocaster_sf2_file } = await import('assets/0272_Stratocaster_sf2_file');
+    player.adjustPreset(audioContext, _tone_0272_Stratocaster_sf2_file);
+
+    currentInstrument = _tone_0272_Stratocaster_sf2_file;
+  } else if (instrument === Instrument.AcousticGuitar1) {
+    currentInstrument = _tone_0253_Acoustic_Guitar_sf2_file;
+  }
+  /* eslint-disable @typescript-eslint/camelcase */
+}
+
+export { play, playChord, changeInstrument };
