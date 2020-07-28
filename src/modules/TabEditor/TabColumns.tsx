@@ -89,7 +89,6 @@ const TabColumns: React.FC<Props> = () => {
             <S.TabColumns onClick={(e: MouseEvent<HTMLDivElement>) => onTablatureClick(e, key)}>
               <S.Column className="static">
                 {getOpenNotesArray(openNotes).map((note, idx) => (
-                  // eslint-disable-next-line react/no-array-index-key
                   <span key={idx}>{note}</span>
                 ))}
               </S.Column>
