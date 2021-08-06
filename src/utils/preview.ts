@@ -34,7 +34,11 @@ export const generatePDF = (svg: string): void => {
         type: 'application/octet-stream',
       });
       const blobUrl = URL.createObjectURL(pdfBlob);
-      window.open(blobUrl);
+      const fileLink = document.createElement('a');
+      fileLink.href = blobUrl;
+      fileLink.download = 'tabs.pdf';
+      fileLink.click();
+      // window.open(blobUrl);
     },
     // readable streaaam stub iplementation
     on: (event, action) => {},
