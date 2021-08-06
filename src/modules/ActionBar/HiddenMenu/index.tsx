@@ -73,7 +73,7 @@ const HiddenMenu: React.FC = () => {
         <IconButton
           icon={<PageIcon />}
           label="show preview"
-          onClick={(): void => displayInfo('this function is not yet implemented')}
+          onClick={(): void => displayInfo("this function hasn't been implemented yet")}
         />
         <IconButton icon={<DownloadIcon />} label="export as" onClick={onDownloadClick} />
       </S.SectionWrapper>
