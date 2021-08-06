@@ -1,4 +1,3 @@
-import { TabNote } from 'types/notes';
 import { NOTES_PROGRESSION } from 'constants/notes';
 import { OpenNotes, EditorState } from 'AppContext';
 import { saveToHistory } from 'utils/localStorage';

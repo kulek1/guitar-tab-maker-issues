@@ -4,9 +4,8 @@ import { generateEmptyTablature } from './service';
 import TabColumns from './TabColumns';
 import * as S from './styles';
 
-type Props = {};
 
-const TabEditor: React.FC<Props> = () => {
+const TabEditor: React.FC = () => {
   const { openNotes } = useContext(AppContext);
 
   useEffect(() => {

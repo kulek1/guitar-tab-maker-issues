@@ -17,7 +17,7 @@ import * as S from './styles';
 import IconButton from './IconButton';
 
 (window as any).html2canvas = html2canvas;
-const HiddenMenu: React.FC<{}> = () => {
+const HiddenMenu: React.FC = () => {
   const { displayWarning, displayError, displayInfo } = useToast();
   const {
     editorState,
