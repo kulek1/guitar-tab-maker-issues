@@ -147,16 +147,12 @@ export const insertSpace = (
   editorState: EditorState,
   tablatureIndex: string,
   tablatureColumn: string
-): EditorState => {
-  return insertNotesInOneColumn(editorState, tablatureIndex, tablatureColumn, null);
-};
+): EditorState => insertNotesInOneColumn(editorState, tablatureIndex, tablatureColumn, null);
 export const insertX = (
   editorState: EditorState,
   tablatureIndex: string,
   tablatureColumn: string
-): EditorState => {
-  return insertNotesInOneColumn(editorState, tablatureIndex, tablatureColumn, 'x');
-};
+): EditorState => insertNotesInOneColumn(editorState, tablatureIndex, tablatureColumn, 'x');
 
 export const insertNotesBasedOnPreviousColumn = (
   editorState: EditorState,
@@ -167,7 +163,7 @@ export const insertNotesBasedOnPreviousColumn = (
   const newEditorState = JSON.parse(JSON.stringify(editorState));
   const { notes } = newEditorState[tablatureIndex];
   const previousColumn = notes[parseInt(tablatureColumn, 10) - 1];
-  const hasAtLeastOneNote = !!previousColumn.find((el) => typeof el === 'number');
+  const hasAtLeastOneNote = previousColumn.some((el) => typeof el === 'number');
 
   if (previousColumn && hasAtLeastOneNote) {
     notes[tablatureColumn] = previousColumn.map((note) => {
@@ -179,6 +175,7 @@ export const insertNotesBasedOnPreviousColumn = (
 
     // add next column if it is not added
     const nextIndex = parseInt(tablatureColumn, 10) + 1;
+
     if (!notes[nextIndex]) {
       notes[nextIndex] = [null, null, null, null, null, null];
     }
