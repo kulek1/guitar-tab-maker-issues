@@ -29,12 +29,13 @@
     "yarn": "^1.22.11"
   },
   "scripts": {
-    "start": "ESLINT_NO_DEV_ERRORS=true PUBLIC_URL=/ react-scripts start",
+    "start": "PUBLIC_URL=/ react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "predeploy": "npm run build",
-    "deploy": "gh-pages -b gh-pages -d build"
+    "deploy": "gh-pages -b gh-pages -d build",
+    "prepare": "husky install"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -56,6 +57,8 @@
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-prettier": "^3.4.0",
     "gh-pages": "^3.2.3",
+    "husky": "^7.0.0",
+    "lint-staged": "^12.3.4",
     "node-sass": "^6.0.1",
     "prettier": "^2.3.2"
   }
