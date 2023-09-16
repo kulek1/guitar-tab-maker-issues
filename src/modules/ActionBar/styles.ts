@@ -1,5 +1,5 @@
-import styled, { css } from 'styled-components/macro';
-import { ReactComponent as PauseIcon } from 'assets/icons/pause-outline.svg';
+import styled, { css } from 'styled-components';
+import { ReactComponent as PauseIcon } from '~/assets/icons/pause-outline.svg';
 
 export const Sticky = styled.div`
   position: fixed;
@@ -28,7 +28,7 @@ export const Wrapper = styled.div`
   }
 `;
 
-export const Btn = styled.button<{ rotate?: boolean; active?: boolean }>`
+export const Btn = styled.button<{ $rotate?: boolean; $active?: boolean }>`
   width: 32px;
   height: 32px;
   background: transparent;
@@ -37,8 +37,8 @@ export const Btn = styled.button<{ rotate?: boolean; active?: boolean }>`
   justify-content: center;
   align-items: center;
 
-  ${({ rotate }) =>
-    rotate &&
+  ${({ $rotate }) =>
+    $rotate &&
     css`
       transform: rotate(180deg);
     `}
@@ -47,8 +47,8 @@ export const Btn = styled.button<{ rotate?: boolean; active?: boolean }>`
     stroke: #000000;
   }
 
-  ${({ active }) =>
-    active &&
+  ${({ $active }) =>
+    $active &&
     css`
       svg {
         path,
@@ -101,7 +101,7 @@ export const Pause = styled(PauseIcon)`
   width: 20px;
 `;
 
-export const HiddenMenu = styled.div<{}>`
+export const HiddenMenu = styled.div<{ $opened: boolean }>`
   transition: all ease 0.6s;
   background: #fff;
   width: 100%;
@@ -115,8 +115,8 @@ export const HiddenMenu = styled.div<{}>`
   border-radius: 25px;
   box-shadow: 0px 0px 16px 0px rgba(160, 160, 160, 0.5);
 
-  ${({ opened }) =>
-    opened &&
+  ${({ $opened }) =>
+    $opened &&
     css`
       height: 350px;
 

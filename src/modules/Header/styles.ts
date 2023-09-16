@@ -1,5 +1,5 @@
-import styled from 'styled-components/macro';
-import { ReactComponent as SettingsIcon } from 'assets/icons/settings.svg';
+import styled from 'styled-components';
+import { ReactComponent as SettingsIcon } from '~/assets/icons/settings.svg';
 
 export const LogoWrapper = styled.div`
   font-family: 'Roboto', sans-serif;

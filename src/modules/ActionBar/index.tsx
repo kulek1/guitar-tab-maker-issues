@@ -1,20 +1,20 @@
 import React, { useContext, useState, useEffect, useRef } from 'react';
-import { ReactComponent as AddIcon } from 'assets/icons/add-outline.svg';
-import { ReactComponent as BinIcon } from 'assets/icons/bin.svg';
-import { ReactComponent as RefreshIcon } from 'assets/icons/refresh.svg';
-import { ReactComponent as PlayIcon } from 'assets/icons/play-outline.svg';
-import { ReactComponent as CloseIcon } from 'assets/icons/close-outline.svg';
-import { ReactComponent as PageIcon } from 'assets/icons/page.svg';
-import { ReactComponent as DownloadIcon } from 'assets/icons/download.svg';
-import { ReactComponent as ArrowIcon } from 'assets/icons/arrow-forward-outline.svg';
+import { ReactComponent as AddIcon } from '~/assets/icons/add-outline.svg';
+import { ReactComponent as BinIcon } from '~/assets/icons/bin.svg';
+import { ReactComponent as RefreshIcon } from '~/assets/icons/refresh.svg';
+import { ReactComponent as PlayIcon } from '~/assets/icons/play-outline.svg';
+import { ReactComponent as CloseIcon } from '~/assets/icons/close-outline.svg';
+import { ReactComponent as PageIcon } from '~/assets/icons/page.svg';
+import { ReactComponent as DownloadIcon } from '~/assets/icons/download.svg';
+import { ReactComponent as ArrowIcon } from '~/assets/icons/arrow-forward-outline.svg';
 
-import AppContext from 'AppContext';
-import { isSelectionAtEnd, clearColumn, removeTablature } from 'modules/TabEditor/service';
-import { useToast } from 'hooks/useToasts';
+import AppContext from '~/AppContext';
+import { isSelectionAtEnd, clearColumn, removeTablature } from '~/modules/TabEditor/service';
+import { useToast } from '~/hooks/useToasts';
 import * as S from './styles';
 import HiddenMenu from './HiddenMenu';
 
-const ActionBar: React.FC<{}> = () => {
+const ActionBar: React.FC = () => {
   const { displayError } = useToast();
   const [isMenu, setIsMenu] = useState(false);
   const {
@@ -81,7 +81,7 @@ const ActionBar: React.FC<{}> = () => {
 
   return (
     <S.Sticky>
-      <S.HiddenMenu opened={isMenu}>
+      <S.HiddenMenu $opened={isMenu}>
         <HiddenMenu />
       </S.HiddenMenu>
       <S.Wrapper>
@@ -101,14 +101,14 @@ const ActionBar: React.FC<{}> = () => {
           type="button"
           title="play selected tablature"
           onClick={onPlayClick}
-          active={isPlaying}
+          $active={isPlaying}
         >
           {isPlaying ? <S.Pause /> : <PlayIcon />}
         </S.Btn>
         <S.Btn
           type="button"
           title="Move selection to left (Left arrow)"
-          rotate
+          $rotate
           onClick={previousColumn}
         >
           <ArrowIcon />

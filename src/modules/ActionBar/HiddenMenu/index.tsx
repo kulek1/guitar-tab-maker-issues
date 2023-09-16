@@ -1,18 +1,18 @@
 import React, { useContext } from 'react';
-import { ReactComponent as AddIcon } from 'assets/icons/add-outline.svg';
-import { ReactComponent as TabIcon } from 'assets/icons/tab-outline.svg';
-import { ReactComponent as PageIcon } from 'assets/icons/page.svg';
-import { ReactComponent as DownloadIcon } from 'assets/icons/download.svg';
+import { ReactComponent as AddIcon } from '~/assets/icons/add-outline.svg';
+import { ReactComponent as TabIcon } from '~/assets/icons/tab-outline.svg';
+import { ReactComponent as PageIcon } from '~/assets/icons/page.svg';
+import { ReactComponent as DownloadIcon } from '~/assets/icons/download.svg';
 import html2canvas from 'html2canvas';
-import { saveToPdf } from 'utils/preview';
-import AppContext from 'AppContext';
+import { saveToPdf } from '~/utils/preview';
+import AppContext from '~/AppContext';
 import {
   addTablature,
   insertSpace,
   insertX,
   insertNotesBasedOnPreviousColumn,
-} from 'modules/TabEditor/service';
-import { useToast } from 'hooks/useToasts';
+} from '~/modules/TabEditor/service';
+import { useToast } from '~/hooks/useToasts';
 import * as S from './styles';
 import IconButton from './IconButton';
 
@@ -58,7 +58,7 @@ const HiddenMenu: React.FC = () => {
   function handleCustomNotes(note: string): void {
     try {
       setEditorState(
-        insertNotesBasedOnPreviousColumn(editorState, currentTabIndex, currentTabColumn, note)
+        insertNotesBasedOnPreviousColumn(editorState, currentTabIndex, currentTabColumn, note),
       );
     } catch (err) {
       displayWarning('Previous column does not have any notes');

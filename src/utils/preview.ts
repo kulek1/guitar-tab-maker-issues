@@ -1,5 +1,5 @@
 import SVGtoPDF from 'svg-to-pdfkit';
-import { EditorState } from 'AppContext';
+import { EditorState } from '~/AppContext';
 
 const { vextab } = window as any;
 const { Renderer } = vextab.Vex.Flow;
@@ -25,9 +25,8 @@ export const generatePreview = (htmlElement: HTMLElement, vextabSyntax: string):
 };
 export const generatePDF = (svg: string): void => {
   const doc = new (window as any).PDFDocument();
-  const chunks = [];
+  const chunks = [] as any[];
   const stream = doc.pipe({
-    // @ts-ignore
     write: (chunk) => chunks.push(chunk),
     end: () => {
       const pdfBlob = new Blob(chunks, {
@@ -69,7 +68,7 @@ export const generateVextabSyntax = (editorState: EditorState): string => {
             const newNote = insert(
               columnAccumulator,
               columnAccumulator.length - 1,
-              `${shouldAddSeparator ? '.' : ''}${currentNote}/${currentNoteIndex + 1}`
+              `${shouldAddSeparator ? '.' : ''}${currentNote}/${currentNoteIndex + 1}`,
             );
             return newNote;
           }
@@ -80,7 +79,7 @@ export const generateVextabSyntax = (editorState: EditorState): string => {
           }
           return columnAccumulator;
         },
-        hasMoreThanOneNotes ? '()' : ''
+        hasMoreThanOneNotes ? '()' : '',
       );
       if (column !== '()') {
         return `${accumulator}${column} `;

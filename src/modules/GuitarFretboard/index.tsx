@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import AppContext from 'AppContext';
+import AppContext from '~/AppContext';
 import OpenNoteSelector from './OpenNoteSelector';
 import FretNotes from './FretNotes';
 

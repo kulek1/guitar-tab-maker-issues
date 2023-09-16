@@ -1,6 +1,6 @@
-import { NOTES_PROGRESSION } from 'constants/notes';
-import { OpenNotes, EditorState } from 'AppContext';
-import { saveToHistory } from 'utils/localStorage';
+import { NOTES_PROGRESSION } from '~/constants/notes';
+import { OpenNotes, EditorState } from '~/AppContext';
+import { saveToHistory } from '~/utils/localStorage';
 
 const EMPTY_NOTES_COUNTER = 20;
 
@@ -9,7 +9,7 @@ export const hasNoteOrTabNotation = (char: string): boolean =>
   !!Number(char) || TAB_NOTATIONS.includes(char);
 
 export const hasTablatureSyntax = (text: string): boolean =>
-  NOTES_PROGRESSION.some((note) => text.toUpperCase().startsWith(`${note}|`));
+  NOTES_PROGRESSION.some((note): boolean => text.toUpperCase().startsWith(`${note}|`));
 
 export const getOpenNotesArray = (openNotes: OpenNotes): string[] =>
   Object.values(openNotes).map((openNote) => openNote.note);
@@ -29,7 +29,7 @@ export const generateEmptyTablature = (openNotes: OpenNotes): Tablature => {
     generatedNotes.push([null, null, null, null, null, null]);
   }
   return {
-    // @ts-ignore
+    // @ts-expect-error to fix
     notes: generatedNotes,
   };
 };
@@ -37,7 +37,7 @@ export const generateEmptyTablature = (openNotes: OpenNotes): Tablature => {
 export const isSelectionAtEnd = (
   editorState: EditorState,
   currentTabIndex: string,
-  currentTabColumn: string
+  currentTabColumn: string,
 ): boolean => {
   const columnsCounter = editorState[currentTabIndex].notes.length;
   const currentTabColumnNumber = parseInt(currentTabColumn, 10);
@@ -91,7 +91,7 @@ export const insertNoteToState = ({
 export const clearColumn = (
   editorState: EditorState,
   tablatureIndex: string,
-  tablatureColumn: string
+  tablatureColumn: string,
 ): EditorState => {
   const newEditorState = JSON.parse(JSON.stringify(editorState));
   newEditorState[tablatureIndex].notes[tablatureColumn] = [null, null, null, null, null, null];
@@ -105,7 +105,7 @@ export const removeTablature = (editorState: EditorState, tablatureIndex: string
 };
 
 export const addTablature = (editorState: EditorState): { state: EditorState; newKey: number } => {
-  const newEditorState = JSON.parse(JSON.stringify(editorState));
+  const newEditorState = JSON.parse(JSON.stringify(editorState)) as EditorState;
   const tabKeys = Object.keys(newEditorState);
 
   let largestKey = 0;
@@ -127,7 +127,7 @@ export const insertNotesInOneColumn = (
   editorState: EditorState,
   tablatureIndex: string,
   tablatureColumn: string,
-  noteToAdd: string | null
+  noteToAdd: string | null,
 ): EditorState => {
   const newEditorState = JSON.parse(JSON.stringify(editorState));
   const { notes } = newEditorState[tablatureIndex];
@@ -145,19 +145,19 @@ export const insertNotesInOneColumn = (
 export const insertSpace = (
   editorState: EditorState,
   tablatureIndex: string,
-  tablatureColumn: string
+  tablatureColumn: string,
 ): EditorState => insertNotesInOneColumn(editorState, tablatureIndex, tablatureColumn, null);
 export const insertX = (
   editorState: EditorState,
   tablatureIndex: string,
-  tablatureColumn: string
+  tablatureColumn: string,
 ): EditorState => insertNotesInOneColumn(editorState, tablatureIndex, tablatureColumn, 'x');
 
 export const insertNotesBasedOnPreviousColumn = (
   editorState: EditorState,
   tablatureIndex: string,
   tablatureColumn: string,
-  noteToAdd: string
+  noteToAdd: string,
 ): EditorState => {
   const newEditorState = JSON.parse(JSON.stringify(editorState));
   const { notes } = newEditorState[tablatureIndex];
@@ -184,17 +184,20 @@ export const insertNotesBasedOnPreviousColumn = (
       if (!element) {
         return;
       }
-      const previousNote = editorState[tablatureIndex].notes[tablatureColumn][idx + 1];
+      const previousNote = editorState[tablatureIndex].notes[tablatureColumn][idx + 1] as
+        | string
+        | null;
+
       saveToHistory(
         previousNote,
         {
-          // @ts-ignore
+          // @ts-expect-error to fix
           noteNumber: noteToAdd,
           guitarString: idx + 1,
         },
         tablatureIndex,
         tablatureColumn,
-        editorState
+        editorState,
       );
     });
   } else {

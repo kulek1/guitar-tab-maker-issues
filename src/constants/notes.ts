@@ -1,4 +1,4 @@
-import { Note } from 'types/notes';
+import { Note } from '~/types/notes';
 
 type GuitarNotes = {
   '1': Note[];
@@ -24,7 +24,20 @@ export const NOTES_TO_NUMBERS: { [key in Note]: number } = {
   B: 12,
 };
 
-export const NOTES_PROGRESSION: Note[] = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
+export const NOTES_PROGRESSION: Note[] = [
+  'C',
+  'C#',
+  'D',
+  'D#',
+  'E',
+  'F',
+  'F#',
+  'G',
+  'G#',
+  'A',
+  'A#',
+  'B',
+];
 
 // prettier-ignore
 export const NOTES: GuitarNotes = {

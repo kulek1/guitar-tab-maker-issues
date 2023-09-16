@@ -1,7 +1,7 @@
 import React, { useContext, ChangeEvent } from 'react';
-import { NoteInfo, Note } from 'types/notes';
-import { NOTES_PROGRESSION } from 'constants/notes';
-import AppContext from 'AppContext';
+import { NoteInfo, Note } from '~/types/notes';
+import { NOTES_PROGRESSION } from '~/constants/notes';
+import AppContext from '~/AppContext';
 
 type Props = {
   defaultNote: NoteInfo;
@@ -26,7 +26,7 @@ const OpenNoteSelector: React.FC<Props> = ({ defaultNote, guitarString }) => {
             {note}
             {idx}
           </option>
-        ))
+        )),
       )}
     </select>
   );

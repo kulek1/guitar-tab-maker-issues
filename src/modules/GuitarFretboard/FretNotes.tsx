@@ -1,9 +1,9 @@
 import React, { useContext } from 'react';
-import { Note } from 'types/notes';
-import { MORE_NOTES } from 'constants/notes';
-import { generateOctaveWithNumbers, convertToOpenNote, getNoteWithoutOctave } from 'utils/notes';
-import { play } from 'utils/webAudioPlayer';
-import AppContext from 'AppContext';
+import { Note } from '~/types/notes';
+import { MORE_NOTES } from '~/constants/notes';
+import { generateOctaveWithNumbers, convertToOpenNote, getNoteWithoutOctave } from '~/utils/notes';
+import { play } from '~/utils/webAudioPlayer';
+import AppContext from '~/AppContext';
 
 type Props = {
   frets: number;
@@ -53,7 +53,7 @@ const FretNotes: React.FC<Props> = ({ onNoteClick, frets }) => {
                   >
                     {note}
                   </button>
-                )
+                ),
               )}
             </ul>
           </div>

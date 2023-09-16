@@ -1,19 +1,28 @@
 {
   "extends": [
-    "react-app",
-    "airbnb-typescript",
     "airbnb/hooks",
     "plugin:@typescript-eslint/eslint-recommended",
     "plugin:@typescript-eslint/recommended",
     "plugin:@typescript-eslint/recommended-requiring-type-checking",
     "prettier"
   ],
-  "parserOptions": {
-    "project": "./tsconfig.json"
-  },
-  "rules": {
+    "plugins": ["prettier"],
+    "parserOptions": {
+      "project": "./tsconfig.json"
+    },
+    "rules": {
+    "prettier/prettier": "error",
     "react/prop-types": 0,
     "import/prefer-default-export": 0,
-    "@typescript-eslint/no-unsafe-assignment": 0
+    "@typescript-eslint/no-unsafe-assignment": 0,
+    "@typescript-eslint/no-unused-vars": 1,
+    "@typescript-eslint/no-unsafe-member-access": 1,
+    "@typescript-eslint/no-unsafe-call": 1,
+    "@typescript-eslint/no-explicit-any": 1,
+    "@typescript-eslint/no-unsafe-return": 0,
+    "@typescript-eslint/no-misused-promises": [
+      "error",
+      {"checksVoidReturn": {"attributes": false}}
+    ]
   }
 }

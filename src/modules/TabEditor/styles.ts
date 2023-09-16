@@ -1,4 +1,4 @@
-import styled, { css } from 'styled-components/macro';
+import styled, { css } from 'styled-components';
 
 export const TabColumns = styled.div`
   display: flex;
@@ -12,7 +12,7 @@ export const TabColumnsWrapper = styled.div`
   padding: 0 1em;
 `;
 
-export const Column = styled.div`
+export const Column = styled.div<{ $active?: boolean }>`
   display: flex;
   flex-direction: column;
   flex-wrap: nowrap;
@@ -36,8 +36,8 @@ export const Column = styled.div`
     }
   }
 
-  ${({ active }) =>
-    active &&
+  ${({ $active }) =>
+    $active &&
     css`
       background: #e2ecfe;
     `}

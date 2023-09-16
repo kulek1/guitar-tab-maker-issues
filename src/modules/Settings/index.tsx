@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import 'react-responsive-modal/styles.css';
 import { Modal } from 'react-responsive-modal';
-import Select from 'components/Select';
-import { changeInstrument, Instrument } from 'utils/webAudioPlayer';
+import Select from '~/components/Select';
+import { changeInstrument, Instrument } from '~/utils/webAudioPlayer';
 import * as S from './styles';
 
 type Props = {
@@ -23,11 +23,13 @@ const SELECT_OPTIONS = [
 
 const Settings: React.FC<Props> = ({ isOpen, onCloseModal }) => {
   const [selectedInstrument, setSelectedInstrument] = useState<Instrument>(
-    Instrument.AcousticGuitar1
+    Instrument.AcousticGuitar1,
   );
 
-  function onInstrumentChange({ target }: React.ChangeEvent<HTMLSelectElement>): void {
-    changeInstrument(target.value as Instrument);
+  async function onInstrumentChange({
+    target,
+  }: React.ChangeEvent<HTMLSelectElement>): Promise<void> {
+    await changeInstrument(target.value as Instrument);
     setSelectedInstrument(target.value as Instrument);
   }
 

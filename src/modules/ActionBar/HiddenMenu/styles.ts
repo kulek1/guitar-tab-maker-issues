@@ -1,4 +1,4 @@
-import styled, { css } from 'styled-components/macro';
+import styled, { css } from 'styled-components';
 
 export const Wrapper = styled.div`
   padding: 1em;
@@ -9,7 +9,7 @@ export const Wrapper = styled.div`
     margin: 1em;
   }
 `;
-export const IconButton = styled.button<{ secondary2?: boolean }>`
+export const IconButton = styled.button<{ $secondary?: boolean }>`
   background: transparent;
   padding: 0.5rem;
 
@@ -25,8 +25,8 @@ export const IconButton = styled.button<{ secondary2?: boolean }>`
     justify-content: center;
     align-items: center;
 
-    ${({ secondary }) =>
-      secondary &&
+    ${({ $secondary }) =>
+      $secondary &&
       css`
         color: #6f8fc1;
         margin-bottom: 0;

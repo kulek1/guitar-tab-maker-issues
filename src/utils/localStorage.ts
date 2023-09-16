@@ -1,10 +1,10 @@
-import { TabNote } from 'types/notes';
-import { EditorState } from 'AppContext';
+import { TabNote } from '~/types/notes';
+import { EditorState } from '~/AppContext';
 
 const MAX_SIZE = 30;
 
 type HistoryEntry = {
-  previousNote: string;
+  previousNote: string | null;
   note: number;
   guitarString: number;
   tablatureColumn: string;
@@ -25,11 +25,11 @@ export const getEditorState = (): EditorState => {
 };
 
 export const saveToHistory = (
-  previousNote: string,
+  previousNote: string | null,
   note: TabNote,
   tablatureIndex: string,
   tablatureColumn: string,
-  editorState: EditorState
+  editorState: EditorState,
 ): void => {
   const currentState = localStorage.getItem('history');
   const parsedState: Storage['history'] = JSON.parse(currentState || '[]');

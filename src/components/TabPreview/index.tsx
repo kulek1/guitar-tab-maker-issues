@@ -1,13 +1,14 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-// @ts-ignore
+// @ts-expect-error to fix
 const appRoot: HTMLElement = document.getElementById('root');
 
-export default class TabPreview extends React.Component {
+type Props = { children?: React.ReactNode };
+export default class TabPreview extends React.Component<Props> {
   el: HTMLDivElement;
 
-  constructor(props) {
+  constructor(props: Props) {
     super(props);
     this.el = document.createElement('div');
     this.el.id = 'tab-preview';
@@ -31,6 +32,7 @@ export default class TabPreview extends React.Component {
 
   render(): React.ReactPortal {
     const { children } = this.props;
+    // @ts-expect-error to fix
     return ReactDOM.createPortal(children, this.el);
   }
 }

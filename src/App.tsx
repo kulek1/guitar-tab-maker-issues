@@ -5,23 +5,23 @@ import AppContext, {
   initialEditorState,
   EditorState,
   EditorStateEntry,
-} from 'AppContext';
-import { TabNote, Note } from 'types/notes';
-import { convertToOpenNote } from 'utils/notes';
-import { insertNoteToState, isSelectionAtEnd } from 'modules/TabEditor/service';
-import MainLayout from 'layout/MainLayout';
-import { playNotes } from 'modules/TabEditor/player';
+} from '~/AppContext';
+import { TabNote, Note } from '~/types/notes';
+import { convertToOpenNote } from '~/utils/notes';
+import { insertNoteToState, isSelectionAtEnd } from '~/modules/TabEditor/service';
+import MainLayout from '~/layout/MainLayout';
+import { playNotes } from '~/modules/TabEditor/player';
 import {
   saveToHistory,
   getHistory,
   removeLastElementFromHistory,
   getEditorState,
   saveEditorState,
-} from 'utils/localStorage';
-import TabPreview from 'components/TabPreview';
-import { useToast } from 'hooks/useToasts';
+} from '~/utils/localStorage';
+import TabPreview from '~/components/TabPreview';
+import { useToast } from '~/hooks/useToasts';
 
-const App: React.FC<{}> = () => {
+const App: React.FC = () => {
   const [currentTabColumn, setCurrentTabColumn] = useState('0');
   const [currentTabIndex, setCurrentTabIndex] = useState('0');
   const [openNotes, setOpenNotes] = useState(openNotesInitialValue);
@@ -49,7 +49,10 @@ const App: React.FC<{}> = () => {
       const currentTablature: EditorStateEntry = editorState[currentTabIndex];
       if (currentTablature) {
         // Get previous note so we can restore e.g. note change from 4->6
-        const previousNote = currentTablature.notes[currentTabColumn][note.guitarString - 1];
+        const previousNote = currentTablature.notes[currentTabColumn][note.guitarString - 1] as
+          | string
+          | null;
+
         saveToHistory(previousNote, note, currentTabIndex, currentTabColumn, editorState);
       }
       handleEditorState(newState);
@@ -60,7 +63,9 @@ const App: React.FC<{}> = () => {
         setCurrentTabColumn(nextColumn);
       }
     } catch (err) {
-      displayError(err.message);
+      if (err instanceof Error) {
+        displayError(err.message);
+      }
     }
   }
 
@@ -105,7 +110,9 @@ const App: React.FC<{}> = () => {
       try {
         await playNotes(editorState, currentTabIndex, openNotes, playerStop.current);
       } catch (err) {
-        displayError(err.message);
+        if (err instanceof Error) {
+          displayError(err.message);
+        }
       }
       setIsPlaing(false);
     }

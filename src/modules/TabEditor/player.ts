@@ -4,13 +4,13 @@ import {
   NUMBER_TO_NOTE,
   NotePlayerData,
   playChord,
-} from 'utils/webAudioPlayer';
-import { OpenNotes, EditorState } from 'AppContext';
+} from '~/utils/webAudioPlayer';
+import { OpenNotes, EditorState } from '~/AppContext';
 
 function getNotesToPlay(
   editorState: EditorState,
   currentTabIndex: string,
-  openNotes: OpenNotes
+  openNotes: OpenNotes,
 ): NotePlayerData[][] {
   let idx = 0;
   const maxTabLength = editorState[currentTabIndex].notes.length;
@@ -25,7 +25,12 @@ function getNotesToPlay(
       if (Number.isInteger(currentNote)) {
         const charAsNumber = currentNote;
 
-        const openNoteOctave = openNotes[guitarStringIdx + 1].octave;
+        const openNoteOctave = openNotes[guitarStringIdx + 1]?.octave;
+
+        if (typeof openNoteOctave !== 'number') {
+          throw new Error('openNoteOctave is not a number');
+        }
+
         const openNoteAsNumberInScale = NOTES_TO_NUMBER[openNotes[guitarStringIdx + 1].note];
         const octaveOffset = (openNoteAsNumberInScale + charAsNumber) / 12;
 
@@ -48,7 +53,7 @@ export const playNotes = async (
   editorState: EditorState,
   currentTabIndex: string,
   openNotes: OpenNotes,
-  emptyObject: { cancel?: () => void }
+  emptyObject: { cancel?: () => void },
 ): Promise<void> => {
   let isPromiseCancelled = false;
   // eslint-disable-next-line no-param-reassign

@@ -1,5 +1,5 @@
 import React, { useContext, MouseEvent } from 'react';
-import AppContext from 'AppContext';
+import AppContext from '~/AppContext';
 import * as S from './styles';
 import { getOpenNotesArray } from './service';
 
@@ -50,9 +50,7 @@ import { getOpenNotesArray } from './service';
 //   },
 // };
 
-type Props = {};
-
-const TabColumns: React.FC<Props> = () => {
+const TabColumns: React.FC = () => {
   const {
     openNotes,
     addNote,
@@ -64,7 +62,7 @@ const TabColumns: React.FC<Props> = () => {
   } = useContext(AppContext);
 
   function onTablatureClick(event: MouseEvent<HTMLDivElement>, key): void {
-    // @ts-ignore
+    // @ts-expect-error to fix
     let { target }: { target: HTMLElement } = event;
 
     if (target) {
@@ -111,7 +109,7 @@ const TabColumns: React.FC<Props> = () => {
               <S.Column />
               {editorState[key]?.notes.map((notes, columnIdx: number) => (
                 <S.Column
-                  active={columnIdx.toString() === currentTabColumn && key === currentTabIndex}
+                  $active={columnIdx.toString() === currentTabColumn && key === currentTabIndex}
                 >
                   {notes.map((note, guitarString) => (
                     <div>
@@ -128,7 +126,7 @@ const TabColumns: React.FC<Props> = () => {
                 </S.Column>
               ))}
             </S.TabColumns>
-          )
+          ),
       )}
     </>
   );

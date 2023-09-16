@@ -1,5 +1,5 @@
 import React from 'react';
-import { TabNote, NoteInfo, Note } from 'types/notes';
+import { TabNote, NoteInfo, Note } from '~/types/notes';
 
 export type OpenNotes = {
   1: NoteInfo;
@@ -32,7 +32,7 @@ type AppCtx = {
   addNote: (note: TabNote) => void;
   setOpenNotes: (note: Note, guitarString: number) => void;
   clearEditorState: () => void;
-  onPlayClick: () => void;
+  onPlayClick: () => Promise<void>;
   goBack: () => void;
 };
 

@@ -1,5 +1,5 @@
-import { Note, NoteInfo } from 'types/notes';
-import { NOTES_PROGRESSION, NOTES_TO_NUMBERS } from 'constants/notes';
+import { Note, NoteInfo } from '~/types/notes';
+import { NOTES_PROGRESSION, NOTES_TO_NUMBERS } from '~/constants/notes';
 
 // F#3 -> F# and 3
 export const convertToOpenNote = (note: Note): NoteInfo => ({

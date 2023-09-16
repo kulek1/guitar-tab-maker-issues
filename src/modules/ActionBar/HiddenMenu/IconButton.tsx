@@ -10,7 +10,7 @@ type Props = {
 
 const IconButton: React.FC<Props> = ({ icon, label, secondary, onClick }) => {
   return (
-    <S.IconButton secondary={secondary} onClick={onClick}>
+    <S.IconButton $secondary={secondary} onClick={onClick}>
       <div>{icon}</div>
       {label && <p>{label}</p>}
     </S.IconButton>
