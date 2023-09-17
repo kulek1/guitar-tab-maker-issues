@@ -22,6 +22,7 @@ export const Wrapper = styled.div`
   border-radius: 25px;
   background: #fff;
   position: relative;
+  max-width: 800px;
 
   @media print {
     display: none;
