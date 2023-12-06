@@ -5,6 +5,6 @@ Since the app is not fully open-source, this repository serves as a place for bu
 
 Website: [tab-maker.com](https://tab-maker.com) 
 
-[Report a bug](https://github.com/kulek1/guitar-tab-maker/issues)
+[Report a bug](https://github.com/kulek1/guitar-tab-maker-issues/issues)
 
-[Feature requests](https://github.com/kulek1/guitar-tab-maker/issues)
+[Feature requests](https://github.com/kulek1/guitar-tab-maker-issues/labels/feature%20request)
