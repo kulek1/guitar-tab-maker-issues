@@ -13,3 +13,6 @@ Website: [tab-maker.com](https://tab-maker.com)
 
 ## 👉 Do you like the app? Buy me a Coffee ☕️ 
 <a href="https://www.buymeacoffee.com/tabmaker" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy Me A Coffee" style="height: 60px !important;width: 217px !important;" ></a>
+
+## Main Supporters
+🏅 Carson B
