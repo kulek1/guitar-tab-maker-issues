@@ -9,6 +9,8 @@ Website: [tab-maker.com](https://tab-maker.com)
 
 - [Feature requests](https://github.com/kulek1/guitar-tab-maker-issues/labels/feature%20request)
 
+- [Discord server](https://discord.gg/r8wPVM26)
+
 
 
 ## 👉 Do you like the app? Buy me a Coffee ☕️ 
